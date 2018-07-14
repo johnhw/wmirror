@@ -1,0 +1,2 @@
+# wmirror
+RPi magic mirror
