@@ -2,14 +2,35 @@ from bottle import route, run
 from bottle import static_file
 import os
 import datetime
-import requests
+
 import time
-from bs4 import BeautifulSoup
-import pyephem
+
+import metoffice
+import astro
+from file_cache import cached_file
+
+
+
+location = {"lat":[60, 11, 37], 'lon':[-1,17,40]}
+
+
+cached_images = {"solar_image.jpg":"https://sdo.gsfc.nasa.gov/assets/img/latest/f_211_193_171pfss_1024.jpg"}
+
+@route('/cached_img/<filename>')
+def cached_image(filename, expiry_hours=4):
+    if filename in cached_images:        
+        # download file as needed
+        local_file = cached_file(cached_images[filename], expiry_hours=expiry_hours)        
+        root, fname = os.path.split(local_file)              
+        return static_file(fname, root=root)
 
 
 
 static_root = '../frontend'
+
+# location in sexigesimal degrees
+
+observer = astro.Astro(lat=":".join([str(l) for l in location['lat']]), lon=":".join([str(l) for l in location['lon']]), elev=0)
 
 @route('/<filename:path>')
 def send_index(filename):
@@ -17,7 +38,7 @@ def send_index(filename):
 
 @route('/location')
 def location():
-    return {"lat":[60, 11, 37], 'lon':[-1,17,40]}
+    return location
 
 # The display format for the time/date/etc.
 @route('/date')
@@ -28,39 +49,25 @@ def date():
     tz = time.strftime('%Z%z')
     return {"date":dayname, "time":current_time, "timezone":tz}
 
-def dictify_dl(dl_tag):
-    d = {}
-    key = dl_tag.findNext('dt')
-    value = dl_tag.findNext('dd')    
-    while key is not None and value is not None:
-        d[key.contents[0]] = value.contents[0]
-        key = value.findNext('dt')
-        value = value.findNext('dd')            
-    return d
-        
-
-@route('/localforecast')
+@route('/metoffice/localforecast')
 def localforecast():
-    forecast_url = "https://www.metoffice.gov.uk/public/weather/marine/inshore-waters-forecast"
-    area = 'iw18' # Shetland Islands
-    
-    forecast = requests.get(forecast_url).content
-    soup = BeautifulSoup(forecast)
-    div = soup.find('div', attrs={"class":"marineCard card forecast", "data-value":area})
-    # <h3> general situation </h3> <p> situation </p>
-    general_situation = div.findNext("h3").findNext('p').contents[0]
-    # structure
-    # dl (today)
-    # dt (title) dd (data)
-    # dl (tomorrow)
-    # dt (title) dd (data)    
-    # keys: Wind, Sea state, Weather, Visibility
-    today_forecast = div.findNext('dl')
-    tomorrow_forecast = div.findNext('dl')    
-    return {"general":general_situation, "today":dictify_dl(today_forecast), "tomorrow":dictify_dl(tomorrow_forecast)}
+    return metoffice.localforecast()
 
+@route('/astro/solar_day')
+def solarday():
+    return observer.solar_day()
 
+@route('/astro/lunar_phase')
+def solarday():
+    return observer.lunar_phase()
 
+@route('/astro/locations')
+def solarday():
+    return observer.locations()    
+
+@route('/astro/transits')
+def solarday():
+    return observer.transits()      
 
 run(host='localhost', port=8080, debug=True, reloader=True)
 
