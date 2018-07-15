@@ -10,11 +10,21 @@ import astro
 from file_cache import cached_file
 
 
-
+# Geographical location
+# location in sexigesimal degrees
 location = {"lat":[60, 11, 37], 'lon':[-1,17,40]}
 
 
-cached_images = {"solar_image.jpg":"https://sdo.gsfc.nasa.gov/assets/img/latest/f_211_193_171pfss_1024.jpg"}
+
+# key:value pairs, indicating a "local name" for a file, and the corresponding URL it should be fetched from
+# this will be cached automatically
+cached_images = {"solar_image.jpg":"https://sdo.gsfc.nasa.gov/assets/img/latest/f_211_193_171pfss_1024.jpg",
+"aurora_prediction.jpg":"http://services.swpc.noaa.gov/images/animations/ovation-north/latest.jpg"}
+
+# root for static files (e.g. index.html, CSS, JS, etc.)
+static_root = '../frontend'
+
+
 
 @route('/cached_img/<filename>')
 def cached_image(filename, expiry_hours=4):
@@ -24,13 +34,10 @@ def cached_image(filename, expiry_hours=4):
         root, fname = os.path.split(local_file)              
         return static_file(fname, root=root)
 
-
-
-static_root = '../frontend'
-
-# location in sexigesimal degrees
-
+# Astronomical calculations
 observer = astro.Astro(lat=":".join([str(l) for l in location['lat']]), lon=":".join([str(l) for l in location['lon']]), elev=0)
+
+metoffice_station = metoffice.nearest_station(observer)
 
 @route('/<filename:path>')
 def send_index(filename):
