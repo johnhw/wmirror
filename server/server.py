@@ -8,12 +8,14 @@ import time
 import metoffice
 import astro
 from file_cache import cached_file
+from pathlib import Path
+
 
 
 # Geographical location
 # location in sexigesimal degrees
 location = {"lat":[60, 11, 37], 'lon':[-1,17,40]}
-
+inshore_area = 'iw18' # Shetland Islands
 
 
 # key:value pairs, indicating a "local name" for a file, and the corresponding URL it should be fetched from
@@ -37,14 +39,25 @@ def cached_image(filename, expiry_hours=4):
 # Astronomical calculations
 observer = astro.Astro(lat=":".join([str(l) for l in location['lat']]), lon=":".join([str(l) for l in location['lon']]), elev=0)
 
-metoffice_station = metoffice.nearest_station(observer)
+#metoffice_station = metoffice.nearest_station(observer.here)
+metoffice_region = "os" # hardcoded for Orkney and Shetland region
 
+# frontend must call this regularly to prevent
+# the keepalive script from shutting down and restarting
+@route('/keepalive') 
+def keepalive():   
+    Path('alive.txt').touch()
+    return {"status":"ok"}
+
+# send static files
 @route('/<filename:path>')
-def send_index(filename):
+def send_static(filename):
     return static_file(filename, static_root)
 
+# report current location, in sexagesimal, as a dictionary mapping lat,lon
+# to triples of integers
 @route('/location')
-def location():
+def get_location():
     return location
 
 # The display format for the time/date/etc.
@@ -58,7 +71,7 @@ def date():
 
 @route('/metoffice/localforecast')
 def localforecast():
-    return metoffice.localforecast()
+    return metoffice.localforecast(inshore_area)
 
 @route('/astro/solar_day')
 def solarday():

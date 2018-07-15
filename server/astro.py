@@ -47,6 +47,19 @@ class Astro:
         return {"moon": {"time":ephem.localtime(ephem.date(date)).isoformat(), "alt":self.moon.alt, "az":self.moon.az},
         "sun": {"time":ephem.localtime(ephem.date(date)).isoformat(), "alt":self.sun.alt, "az":self.sun.az}}
         
+    def solar_analemma(self, date=None):
+        # compute the position of the sun at each point day in the year
+        # at this exact time
+        if date is None:
+            date = datetime.datetime.utcnow() 
+        self.here.date = date
+        solar_analemma = []
+        for i in range(365):
+            self.sun.compute(self.here)
+            solar_analemma.append({"time":ephem.localtime(ephem.date(self.here.date)).isoformat(), "alt":self.sun.alt, "az":self.sun.az})
+            self.here.date += 1
+        return solar_analemma
+
     def transits(self, date=None, n=240):
         if date is None:
             date = datetime.datetime.utcnow() 
@@ -118,4 +131,4 @@ print(a.solar_day())
 print(a.lunar_phase())        
 print(a.transits())
 print(a.locations())
-
+print(a.solar_analemma())

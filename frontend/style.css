@@ -1,4 +1,5 @@
-body 
+#text_style
 {
-    font-family: 'geosanslightregular'
+    font-family: 'geosanslightregular';
+    fill: #ffffff;
 }

@@ -2,5 +2,94 @@
 <meta charset="utf-8">
 <link rel="stylesheet" href="fonts/geosanslight/stylesheet.css" type="text/css" charset="utf-8" />
 <link rel="stylesheet" href="style.css" type="text/css" charset="utf-8" />
+<body>
+    <div id="drawing"></div>
+  </body>
+<script type="text/javascript" src="js/svg.min.js"></script>
+<script>
 
-This is a GeoSansLight test
+    function request(url, callback)
+    {
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                callback(JSON.parse(this.responseText));
+            }
+        };
+        request.open('GET', url);
+        request.send();
+    }
+
+    var draw = SVG('drawing').size(1080, 1920);
+    var rect = draw.rect(1080, 1920).attr({ fill: '#000' })
+    var time_group = draw.group()
+
+    var second_timer = setInterval(updateSecond,1000);
+
+    var dateText = draw.text("")
+    dateText.move(40,20).id("text_style").font({'font-size':80})
+
+    var timeText = draw.text("")
+    timeText.move(40,200).id("text_style").font({'font-size':180})
+
+    function bold_dictionary(json, key_font_props, value_font_props)
+    {        
+        var dict_text = draw.text(function(add) {
+            for (var k in json) {
+                var value = json[k];
+                add.tspan(k).id("text_style").font(key_font_props).newLine();
+                add.tspan(value).id("text_style").style(value_font_props).x(300);                
+            }
+                });    
+        return dict_text;            
+    }
+
+
+    //bold_dictionary({"k":"value"}, {"fill":"#fff"}, {"fill":"#888"});
+
+    baseline = 1920-80;
+    locationText = draw.text("gegeg");
+    locationText.move(40, baseline).id("text_style").font({'font-size':24});
+
+    request("/metoffice/localforecast", json=>{
+        bold_dictionary(json['today'], {"fill":"#fff"}, {"fill":"#888"}).move(200,400);
+        bold_dictionary(json['tomorrow'], {"fill":"#fff"}, {"fill":"#888"}).move(200,500);
+        draw.text(json["general"]).id("text_style").move(200, 350);        
+    });
+
+    function formatLocation(json)
+    {
+        lat = json.lat;
+        lon = json.lon;
+        if(lon[0]<0)
+        {
+            ew = 'W'
+            lon[0] = -lon[0]
+        }
+        else
+        {
+            ew = 'E'
+        }
+        if(lat[0]<0)
+        {
+            ns = 'S'
+            lat[0] = -lat[0]
+        }
+        else
+        { 
+            ns = 'N'
+        }
+        return lat[0] + "°" + lat[1]+" ′" + lat[2] + '″' + ns + "  " + lon[0] + "°" + lon[1]+"′" + lon[2] + '″' + ew;
+        
+
+    }
+    request('/location', json => locationText.text(formatLocation(json)));
+
+    function updateSecond()
+    {
+        request('/date', json => { dateText.text(json.date); timeText.text(json.time) } );
+        request('/keepalive', json => {});
+    }
+
+    
+</script>
