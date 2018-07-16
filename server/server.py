@@ -65,9 +65,15 @@ def get_location():
 def date():    
     dt = datetime.datetime.now()
     dayname = "{dt:%A} {dt.day} {dt:%B}".format(dt=dt)
+    return {"date":dayname}
+
+# The display format for the time/date/etc.
+@route('/time')
+def date():    
+    dt = datetime.datetime.now()    
     current_time = "{dt:%H}:{dt:%M}".format(dt=dt)
     tz = time.strftime('%Z%z')
-    return {"date":dayname, "time":current_time, "timezone":tz}
+    return {"time":current_time, "timezone":tz}    
 
 @route('/metoffice/localforecast')
 def localforecast():
@@ -82,15 +88,15 @@ def solarday():
     return observer.lunar_phase()
 
 @route('/astro/locations')
-def solarday():
+def locations():
     return observer.locations()    
 
 @route('/astro/transits')
-def solarday():
+def transits():
     return observer.transits()      
 
-@route('/astro/analemaa')
-def solarday():
+@route('/astro/analemma')
+def analemma():
     return observer.solar_analemma()          
 
 run(host='localhost', port=8080, debug=True, reloader=True)

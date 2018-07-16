@@ -7,100 +7,17 @@
   </body>
 <script type="text/javascript" src="js/svg.min.js"></script>
 <script type="text/javascript" src="js/gl-matrix-min.js"></script>
+
+<!-- widgets -->
+<script type="text/javascript" src="js/widget_location.js"></script>
+<script type="text/javascript" src="js/perspective.js"></script>
+<script type="text/javascript" src="js/widget_text_forecast.js"></script>
+<script type="text/javascript" src="js/widget_date.js"></script>
+<script type="text/javascript" src="js/widget_time.js"></script>
+
 <script>
 
-    // 3D projection for solar/lunar paths
-    var modelview_matrix = mat4.create();
-    var projection_matrix = mat4.create();
-    // only 2D part used
-    var viewport_matrix = [5,0,0,0,
-                           0,5,0,0,
-                           0,0,1,0,
-                           0,0,0,1];
     
-    mat4.perspective(projection_matrix, 0.5, 1.0, 1, 50);    
-    mat4.lookAt(modelview_matrix, [9,9,-15], [0,0,0], [0,1,0]);
-    
-
-    function perspective_divide(v4)
-    {        
-        for(var i=0;i<4;i++)
-        {
-            v4[i] = v4[i] / v4[3];
-        }     
-    }
-
-    function ftransform(v3)
-    {
-        var t = vec4.create();
-        vec3.transformMat4(t, v3, modelview_matrix);
-        vec4.transformMat4(t, t, projection_matrix);
-        perspective_divide(t);        
-        vec4.transformMat4(t, t, viewport_matrix);
-        return [t[0], t[1]];        
-    }
-    
-
-    function perspective_circle(mat4, start_angle, end_angle)
-    {
-        if (typeof start_angle === 'undefined') { start_angle = 0; }
-        if (typeof end_angle === 'undefined') { end_angle = 2*Math.PI; }
-        var i, n;
-        n = 64; // segments
-        var path_str = "";
-        v4 = vec4.create();
-        for(i=0;i<n;i++)
-        {
-            var angle = (i/(n-1)) * (end_angle-start_angle) + start_angle;
-            var cx = Math.cos(angle);
-            var cy = -Math.sin(angle);
-            vec4.transformMat4(v4, [cx,0,cy,1], mat4);
-            var projected = ftransform([v4[0],v4[1],v4[2]]);
-            path_str += projected[0] + "," + projected[1] + " ";
-        }        
-        return draw.polygon(path_str);
-    }
-
-
-    function perspective_size(v1, w)
-    {
-        var vw = ftransform([v1[0]+w, v1[1]+w, v1[2]+w]);
-        var v = ftransform(v1);
-        var w = (Math.abs(v[0]-vw[0]) + Math.abs(v[1]-vw[1])) / 2 ;
-        return w;
-    }
-
-        
-    function perspective_line(v1, v2, w)
-    {
-        
-        w = perspective_size(v1, w);
-        v1 = ftransform(v1);
-        v2 = ftransform(v2);                
-        return draw.line(v1[0], v1[1], v2[0], v2[1]).style({"stroke-width":w});
-    }
-
-    function perspective_polyline(pts)
-    {
-        v4 = vec4.create();
-        path_str = ""
-        pts.forEach(function(v){
-            var projected = ftransform([v[0],v[1],v[2]]);
-            path_str += projected[0] + "," + projected[1] + " ";
-        });
-        return draw.polyline(path_str);        
-    }
-
-    function perspective_text(v1, text, size)
-    {
-        var v = ftransform(v1);
-        var w = perspective_size(v1, size);                        
-        
-        var text_obj = draw.text(text).font({'font-size':w});        
-        var box = text_obj.bbox();
-        text_obj.move(-box.cx+v[0], -box.cy+v[1]+box.height/5);
-        return text_obj;        
-    }
 
     function compass()
     {        
@@ -109,7 +26,7 @@
         var inner_rad = 0.9;
         var min_rad = 1.0;
         var maj_rad = 1.2;
-        var n = 144;
+        var n = 72;
         var width = 0.002;
         
         for(i=0;i<n;i++)
@@ -161,7 +78,7 @@
         // Inner circle
         mat4.identity(scale);
         mat4.scale(scale, scale, [inner_rad, inner_rad, inner_rad]);
-        rose.add(perspective_circle(scale).stroke({"color":"#fff", "width":0.0025}).fill({"color":"none"}));
+        //rose.add(perspective_circle(scale).stroke({"color":"#fff", "width":0.0025}).fill({"color":"none"}));
 
         // Vertical line
         rose.add(perspective_line([0,0,0], [0,-min_rad,0], w).style({"stroke":"#fff", "stroke-dasharray":"0.01"}));       
@@ -185,7 +102,8 @@
 
     
 
-
+    // Fetch a URL (via GET), parse as JSON and
+    // send to the given callback
     function request(url, callback)
     {
         var request = new XMLHttpRequest();
@@ -205,24 +123,9 @@
 
     var second_timer = setInterval(updateSecond,1000);
 
-    var dateText = draw.text("")
-    dateText.move(40,20).id("text_style").font({'font-size':80})
+    
 
-    var timeText = draw.text("")
-    timeText.move(40,200).id("text_style").font({'font-size':180})
-
-    function bold_dictionary(json, key_font_props, value_font_props)
-    {        
-        var dict_text = draw.text(function(add) {
-            for (var k in json) {
-                var value = json[k];
-                add.tspan(k).id("text_style").font(key_font_props).newLine();
-                add.tspan(value).id("text_style").style(value_font_props).x(300);                
-            }
-                });    
-        return dict_text;            
-    }
-
+  
 
     //bold_dictionary({"k":"value"}, {"fill":"#fff"}, {"fill":"#888"});
 
@@ -230,6 +133,11 @@
     locationText = draw.text("gegeg");
     locationText.move(40, baseline).id("text_style").font({'font-size':24});
 
+    function sph2cart(az, el)
+    {
+        var v1 = [Math.cos(el) * Math.sin(az), -Math.sin(el), Math.cos(el) * Math.cos(az)];            
+        return v1;
+    }
 
     function draw_spherical_path(path, upper_side)
     {
@@ -238,11 +146,11 @@
             
             var az = entry.az;
             var el =  entry.alt;
+            var v1 = sph2cart(az,el);
             // spherical to cartesian
             // should detect breaks and split the polyline
-            if(Math.sin(el)*upper_side>0)            
-            {            
-                var v1 = [Math.cos(el) * Math.sin(az), -Math.sin(el), Math.cos(el) * Math.cos(az)];            
+            if(v1[1]*upper_side<=0)            
+            {                           
                 coords.push(v1);            
             }        
         });
@@ -251,67 +159,101 @@
         return stroke_polyline;
     }
 
+    var compass_group = compass();
+    var compass_rose = compass_group.scale(200.0,200.0).translate(500,900);
+
     function draw_transits(json)
     {
         sun_path = json.sun;
         moon_path = json.moon;
+
+        // draw the rose and various guides
         
-        var compass_group = compass();
-        var day_moon_polyline = draw_spherical_path(moon_path, 1);
-        var night_moon_polyline = draw_spherical_path(moon_path, -1);
+        var day_moon_polyline = draw_spherical_path(moon_path, 1);        
         var day_sun_polyline = draw_spherical_path(sun_path, 1);
+
         var night_sun_polyline = draw_spherical_path(sun_path, -1); // -1 to show night side (below horizon)
+        var night_moon_polyline = draw_spherical_path(moon_path, -1);
         compass_group.add(day_sun_polyline.stroke({"color":"#fff", "width":0.01}).fill({"color":"none"}));
         compass_group.add(night_sun_polyline.stroke({"color":"#337", "width":0.01}).fill({"color":"none"}));
 
-        compass_group.add(day_moon_polyline.stroke({"color":"#ff8", "width":0.01, "dasharray":0.01}).fill({"color":"none"}));
-        compass_group.add(night_moon_polyline.stroke({"color":"#117", "width":0.01, "dasharray":0.01}).fill({"color":"none"}));
+        compass_group.add(day_moon_polyline.stroke({"color":"#ff8", "width":0.01, "dasharray":0.03}).fill({"color":"none"}));
+        compass_group.add(night_moon_polyline.stroke({"color":"#117", "width":0.01, "dasharray":0.03}).fill({"color":"none"}));                        
+    }
+
+    function draw_analemma(json)
+    {
+        sun_analemma = json.sun;                
+        var analemma_polyline = draw_spherical_path(sun_analemma, 0); // 0 for both sides        
+
+        compass_group.add(analemma_polyline.stroke({"color":"#ff2", "width":0.01}).fill({"color":"none"}));                
+    }
+
+    function draw_symbol(obj, sym, font_size)
+    {
+        var group = draw.group();
+        var v1 = sph2cart(obj.az, obj.alt);        
+        var vpos = ftransform(v1);
+        var color = '#fff';
+        console.log(sym,v1,obj);
+        if(obj.alt<0)
+        {
+         color = '#44d';   
+        }
+        var back = draw.circle(font_size*0.9).fill("#000").move(vpos[0]-font_size*0.4, vpos[1]-font_size*0.3);
+        text = perspective_text(v1, sym, font_size).id("text_style").style({"fill":color});
         
-        var compass_rose = compass_group.scale(200.0,200.0).translate(500,900);
+        hline = perspective_line(v1, [v1[0], 0, v1[2]], 0.005).stroke({"color":"#fff", "dasharray":0.03});
+        vline = perspective_line([0,0,0], [v1[0], 0, v1[2]], 0.005).stroke({"color":"#fff", "dasharray":0.03});
+        hypline = perspective_line([0,0,0], v1, 0.005).stroke({"color":"#fff", "dasharray":0.03});
+
+     
         
+        group.add(hline);
+        group.add(vline);
+        group.add(hypline);
+        //group.add(back);
+        group.add(text);
+
+        return group;
+    }
+
+    function deg(rad)
+    {
+        return (rad/Math.PI)*180.0;
+    }
+
+     function draw_locations(json)
+    {
+        console.log(json);
+        var sun_pos = json.sun;
+        sun_symbol = draw_symbol(json.sun, '☉', 0.2, Math.floor(deg(json.sun.alt))+"°", 0.1);
+        moon_symbol = draw_symbol(json.moon, '☽', 0.15, Math.floor(deg(json.moon.alt))+"°", 0.1);
+        
+        
+        compass_group.add(sun_symbol);        
+        compass_group.add(moon_symbol);                
     }
 
     request("/astro/transits", json=>{draw_transits(json)});
+    request("/astro/analemma", json=>{draw_analemma(json)});
+    request("/astro/locations", json=>{draw_locations(json)});
 
-    request("/metoffice/localforecast", json=>{
-        bold_dictionary(json['today'], {"fill":"#fff"}, {"fill":"#888"}).move(200,400);
-        bold_dictionary(json['tomorrow'], {"fill":"#fff"}, {"fill":"#888"}).move(200,500);
-        draw.text(json["general"]).id("text_style").move(200, 350);        
-    });
-
-    function formatLocation(json)
-    {
-        lat = json.lat;
-        lon = json.lon;
-        if(lon[0]<0)
-        {
-            ew = 'W'
-            lon[0] = -lon[0]
-        }
-        else
-        {
-            ew = 'E'
-        }
-        if(lat[0]<0)
-        {
-            ns = 'S'
-            lat[0] = -lat[0]
-        }
-        else
-        { 
-            ns = 'N'
-        }
-        return lat[0] + "°" + lat[1]+" ′" + lat[2] + '″' + ns + "  " + lon[0] + "°" + lon[1]+"′" + lon[2] + '″' + ew;
-        
-
-    }
-    request('/location', json => locationText.text(formatLocation(json)));
-
+   
     function updateSecond()
-    {
-        request('/date', json => { dateText.text(json.date); timeText.text(json.time) } );
+    {        
         request('/keepalive', json => {});
     }
+
+    // Widgets registered here
+    widgets = {"forecast":widget_forecast, 
+              "location":widget_location,
+              "date":widget_date,
+              "time":widget_time};
+
+    // Update all widgets
+    for(widget in widgets) {if(widgets[widget].init) widgets[widget].init();}
+    for(widget in widgets) {widgets[widget].update();}
 
     
 </script>

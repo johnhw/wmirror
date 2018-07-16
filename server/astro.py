@@ -42,6 +42,7 @@ class Astro:
     def locations(self, date=None):
         if date is None:
             date = datetime.datetime.utcnow() 
+        self.here.date = date
         self.moon.compute(self.here)
         self.sun.compute(self.here)
         return {"moon": {"time":ephem.localtime(ephem.date(date)).isoformat(), "alt":self.moon.alt, "az":self.moon.az},
@@ -58,13 +59,12 @@ class Astro:
             self.sun.compute(self.here)
             solar_analemma.append({"time":ephem.localtime(ephem.date(self.here.date)).isoformat(), "alt":self.sun.alt, "az":self.sun.az})
             self.here.date += 1
-        return solar_analemma
+        return {"sun":solar_analemma}
 
     def transits(self, date=None, n=240):
+        # compute path of sun and moon across the whole day
         if date is None:
-            date = datetime.datetime.utcnow() 
-        
-        
+            date = datetime.datetime.utcnow()                 
         morning = ephem.date(date.date())
         evening = ephem.date(date.date()+timedelta(hours=24))
         lunar_transit = []
