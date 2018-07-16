@@ -89,6 +89,10 @@ def solarday():
 def solarday():
     return observer.transits()      
 
+@route('/astro/analemaa')
+def solarday():
+    return observer.solar_analemma()          
+
 run(host='localhost', port=8080, debug=True, reloader=True)
 
     
