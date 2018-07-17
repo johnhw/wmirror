@@ -15,6 +15,15 @@
 <script type="text/javascript" src="js/widget_date.js"></script>
 <script type="text/javascript" src="js/widget_time.js"></script>
 
+Fix exact text layout.
+Update rates for widgets (e.g. 1s for time, 1 min for solar position, 1 day for tracks, 1 hour for forecast)
+Icons/sprite sheet
+SVG file to be read to get rectangle map.
+Widgets should take a rectangle as input (to configure their region).
+Should be updated with update() every update interval.
+Styling should be factored out in palettes, sizes, etc.
+Split compass rose/transits/positions into separate widgets operating on common group (w/different update rates)
+Update w/o flicker
 <script>
 
     
@@ -251,6 +260,7 @@
               "date":widget_date,
               "time":widget_time};
 
+    
     // Update all widgets
     for(widget in widgets) {if(widgets[widget].init) widgets[widget].init();}
     for(widget in widgets) {widgets[widget].update();}

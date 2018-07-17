@@ -85,8 +85,8 @@
         var v = ftransform(v1);
         var w = perspective_size(v1, size);                        
         
-        var text_obj = draw.text(text).font({'font-size':w});        
+        var text_obj = draw.text(text).font({'font-size':w}).move(0,0);        
         var box = text_obj.bbox();
-        text_obj.move(-box.cx+v[0], -box.cy+v[1]+box.height/5);
+        text_obj.move(-box.cx+v[0], -box.cy+v[1]);
         return text_obj;        
     }

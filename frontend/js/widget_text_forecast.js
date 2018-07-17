@@ -11,6 +11,11 @@
         return dict_text;            
     }
 
+function init_forecast(bbox)
+{
+
+}
+
 function update_forecast()
 {
  request("/metoffice/localforecast", json=>{
@@ -20,4 +25,4 @@ function update_forecast()
     });
 }    
 
-widget_forecast = {"update":update_forecast}
+widget_forecast = {"init":init_forecast, "update":update_forecast, "rate":"hourly"}
