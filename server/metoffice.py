@@ -107,6 +107,7 @@ wl Wales
 uk United Kingdom
 """
 
+"""XML feed for shipping forecast: https://www.metoffice.gov.uk/public/data/CoreProductCache/ShippingForecast/Latest"""
 
 with open("../secrets/keys.json") as f:
     keys = json.load(f)
@@ -114,6 +115,8 @@ with open("../secrets/keys.json") as f:
 
 
 def dictify_dl(dl_tag):
+    # Find tags in the form <dt> title </dt> <dd> data </dd>
+    # and put them into a dictionary
     d = {}    
     keys = dl_tag.findAll('dt')
     values = dl_tag.findAll('dd')        
@@ -122,7 +125,7 @@ def dictify_dl(dl_tag):
     return d
         
 
-def localforecast(area):
+def inshore_forecast(area):
     forecast_url = "https://www.metoffice.gov.uk/public/weather/marine/inshore-waters-forecast"        
     forecast = requests.get(forecast_url).content
     soup = BeautifulSoup(forecast)
@@ -143,8 +146,11 @@ def sites():
     return query("sitelist")
 
 
-def nearest_station(observer):
+def nearest_station(lon, lat):
     # find the nearest weather station to the given observer
+    observer = ephem.Observer()
+    observer.lon = lon
+    observer.lat = lat
     sitelist = sites()
     angles = []
     for site in sitelist["Locations"]["Location"]:    

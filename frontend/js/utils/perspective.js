@@ -8,7 +8,7 @@
                            0,0,0,1];
     
     mat4.perspective(projection_matrix, 0.5, 1.0, 1, 50);    
-    mat4.lookAt(modelview_matrix, [9,9,-15], [0,0,0], [0,1,0]);
+    mat4.lookAt(modelview_matrix, [13,-10,10], [0,0,0], [0,1,0]);
     
 
     function perspective_divide(v4)
@@ -85,8 +85,7 @@
         var v = ftransform(v1);
         var w = perspective_size(v1, size);                        
         
-        var text_obj = draw.text(text).font({'font-size':w}).move(0,0);        
-        var box = text_obj.bbox();
-        text_obj.move(-box.cx+v[0], -box.cy+v[1]);
+        var text_obj = text_at(text, v, w);
+        
         return text_obj;        
     }

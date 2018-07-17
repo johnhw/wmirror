@@ -15,6 +15,11 @@ def download_file(path, url):
 
 
 def cached_file(url, expiry_hours):
+    # allow for callbacks which return urls, as well as direct
+    # string urls
+    if callable(url):
+        url = url()
+
     fname = url.split('/')[-1]
     temp_fname = os.path.join(tempdir, fname)
     stale = False

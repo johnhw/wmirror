@@ -11,22 +11,21 @@ from file_cache import cached_file
 from pathlib import Path
 
 
-
 # Geographical location
 # location in sexigesimal degrees
 location = {"lat":[60, 11, 37], 'lon':[-1,17,40]}
-inshore_area = 'iw18' # Shetland Islands
 
+# for MetOffice forecast
+inshore_area = 'iw18' # Shetland Islands
 
 # key:value pairs, indicating a "local name" for a file, and the corresponding URL it should be fetched from
 # this will be cached automatically
-cached_images = {"solar_image.jpg":"https://sdo.gsfc.nasa.gov/assets/img/latest/f_211_193_171pfss_1024.jpg",
-"aurora_prediction.jpg":"http://services.swpc.noaa.gov/images/animations/ovation-north/latest.jpg"}
+cached_images = {
+    "solar_image.jpg":"https://sdo.gsfc.nasa.gov/assets/img/latest/f_211_193_171pfss_1024.jpg",
+    "aurora_prediction.jpg":"http://services.swpc.noaa.gov/images/animations/ovation-north/latest.jpg"}
 
 # root for static files (e.g. index.html, CSS, JS, etc.)
 static_root = '../frontend'
-
-
 
 @route('/cached_img/<filename>')
 def cached_image(filename, expiry_hours=4):
@@ -37,9 +36,9 @@ def cached_image(filename, expiry_hours=4):
         return static_file(fname, root=root)
 
 # Astronomical calculations
-observer = astro.Astro(lat=":".join([str(l) for l in location['lat']]), lon=":".join([str(l) for l in location['lon']]), elev=0)
+astro_observer = astro.Astro(lat=":".join([str(l) for l in location['lat']]), lon=":".join([str(l) for l in location['lon']]), elev=0)
 
-#metoffice_station = metoffice.nearest_station(observer.here)
+#metoffice_station = metoffice.nearest_station(lon=astro_observer.lon, lat=astro_observer.lat)
 metoffice_region = "os" # hardcoded for Orkney and Shetland region
 
 # frontend must call this regularly to prevent
@@ -77,27 +76,27 @@ def date():
 
 @route('/metoffice/localforecast')
 def localforecast():
-    return metoffice.localforecast(inshore_area)
+    return metoffice.inshore_forecast(inshore_area)
 
 @route('/astro/solar_day')
 def solarday():
-    return observer.solar_day()
+    return astro_observer.solar_day()
 
 @route('/astro/lunar_phase')
 def solarday():
-    return observer.lunar_phase()
+    return astro_observer.lunar_phase()
 
 @route('/astro/locations')
 def locations():
-    return observer.locations()    
+    return astro_observer.locations()    
 
 @route('/astro/transits')
 def transits():
-    return observer.transits()      
+    return astro_observer.transits()      
 
 @route('/astro/analemma')
 def analemma():
-    return observer.solar_analemma()          
+    return astro_observer.solar_analemma()          
 
 run(host='localhost', port=8080, debug=True, reloader=True)
 
