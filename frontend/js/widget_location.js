@@ -25,7 +25,15 @@ function formatLocation(json)
 
 function update_location()
 {
+
+}
+
+function init_location(bbox)
+{
+    locationText = draw.text("");
+    locationText.id("text_style").font({'font-size':bbox.h}).move(bbox.x, bbox.y-bbox.h/2);
+
     request('/location', json => locationText.text(formatLocation(json)));
 }
 
-widget_location = {"update":update_location}    
+widget_location = {"update":update_location, "init":init_location}    

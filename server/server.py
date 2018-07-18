@@ -48,10 +48,8 @@ def keepalive():
     Path('alive.txt').touch()
     return {"status":"ok"}
 
-# send static files
-@route('/<filename:path>')
-def send_static(filename):
-    return static_file(filename, static_root)
+
+
 
 # report current location, in sexagesimal, as a dictionary mapping lat,lon
 # to triples of integers
@@ -74,9 +72,23 @@ def date():
     tz = time.strftime('%Z%z')
     return {"time":current_time, "timezone":tz}    
 
-@route('/metoffice/localforecast')
-def localforecast():
-    return metoffice.inshore_forecast(inshore_area)
+@route('/metoffice/closest_station/<latlon>')
+def nearest_station(latlon):
+    # need to parse the latlon to unencode from URL string
+    return metoffice.nearest_station(lon=astro_observer.lon, lat=astro_observer.lat)
+
+@route('/metoffice/forecast/<station>')
+def full_forecast(station):
+    # dummy static forecast for now
+    with open("test_forecast.json") as f:
+        return f.read()        
+    return metoffice.forecast(station)
+
+
+@route('/metoffice/inshore_forecast/<area>')
+def inshore_forecast(area=''):
+    return {}
+    return metoffice.inshore_forecast("iw18")
 
 @route('/astro/solar_day')
 def solarday():
@@ -97,6 +109,11 @@ def transits():
 @route('/astro/analemma')
 def analemma():
     return astro_observer.solar_analemma()          
+
+# send static files
+@route('/<filename:path>')
+def send_static(filename):
+    return static_file(filename, static_root)    
 
 run(host='localhost', port=8080, debug=True, reloader=True)
 

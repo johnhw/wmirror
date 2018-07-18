@@ -59,9 +59,10 @@ function text_at(text, pos, w)
   var text = draw.text(text);
   text.font({'font-size':200});  
   // center text
-  var bbox = text.rbox();
+  var bbox = text.bbox();
   
   text.move(pos[0]-bbox.w/2,pos[1]-bbox.h/2);
+  
   text.scale(0.005*w, 0.005*w);
   return text;
 }

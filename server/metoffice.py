@@ -210,4 +210,4 @@ def get_image_uri(uri):
 #print(txtquery('500'))
 #print(capabilities())
 #print(surface())
-print(localforecast('iw18'))
+#print(localforecast('iw18'))

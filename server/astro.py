@@ -30,13 +30,15 @@ def local_transit(transit, body, location, date, horizon='0', use_center=False):
         return 'never'
     
 
-def format_date(d):
+def format_date(body, here, date):
     # convert special string dates without modification
-    if type(d)==type(""):
-        return d
+    if type(date)==type(""):
+        return {"date":date, "alt":"0.0", "az":"0.0"}
     else:
+        here.date = date
+        body.compute(here)
     # convert to isoformat date
-        return d.isoformat()
+        return {"date":date.isoformat(), "alt":body.alt, "az":body.az}
 
 class Astro:
     def __init__(self, lon, lat, elev=0):
@@ -91,7 +93,7 @@ class Astro:
             
         for i in range(n):
             time = (morning) + (evening-morning)*(i/(n-1))
-            here.date = date
+            here.date = time
         
             self.moon.compute(here)
             self.sun.compute(here)
@@ -129,10 +131,12 @@ class Astro:
 
         return {"phase":self.moon.moon_phase, "radius":self.moon.radius, 'direction':lunar_names[quarter][0], 'name':lunar_names[quarter][1]}
 
-    
+    def solar_day(self, date=None):
+        return self.day(self.sun, date)
+
     # get rising/setting and noon times for the sun, including for civil, nautical and astronomical twilight
     # note that times can be datetime objects, or the strings "always" (sun never sets) or "never" (sun never rises)
-    def solar_day(self, date=None):
+    def day(self, body, date=None):
         day = {}        
         if date is None:
             date = datetime.datetime.utcnow() 
@@ -140,17 +144,17 @@ class Astro:
         here.lat = self.lat
         here.lon = self.lon
         here.date = date
-        rising = local_transit('rising',  self.sun, here, date)         
-        day['rising'] = format_date(rising)
-        day['noon'] = format_date(local_transit('noon',  self.sun, here, rising))
-        day['setting'] = format_date(local_transit('setting',  self.sun, here, rising))
+        rising = local_transit('rising',  body, here, date)         
+        day['rising'] = format_date(body, here, rising)
+        day['noon'] = format_date(body, here, local_transit('noon',  self.sun, here, rising))
+        day['setting'] = format_date(body, here, local_transit('setting',  self.sun, here, rising))
         
         # compute the set/rise times for twilights
         twilights = {'civil':'-6', 'nautical':'-12', 'astronomical':'-18'}
         for name, degrees in twilights.items():
             day[name] = {}                     
-            day[name]['rising'] =  format_date(local_transit('rising',  self.sun, here, date, use_center=True, horizon=degrees))
-            day[name]['setting'] =  format_date(local_transit('setting',  self.sun, here, date, use_center=True, horizon=degrees))
+            day[name]['rising'] =  format_date(body, here, local_transit('rising',  self.sun, here, date, use_center=True, horizon=degrees))
+            day[name]['setting'] =  format_date(body, here, local_transit('setting',  self.sun, here, date, use_center=True, horizon=degrees))
         here.horizon = '0'
         return day
 
