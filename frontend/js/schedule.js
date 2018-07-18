@@ -8,71 +8,65 @@ data_sources = {
     'forecast' : {
         url:'/metoffice/forecast/'+config.station_id,
         update:'hour',
-        deps:[]
     },
     'time' : {
         url:'/time',
         update:'minute',
-        deps:[]
     },
     'location' : {
         url:'/location',
         update:'day',
-        deps:["location"]
     },
     'date' : {
         url:'/date',
         update:'day',
-        deps:[]
     },
     'inshore_forecast' : 
     {
         url:'/metoffice/inshore_forecast/'+config.inshore_area,
         update:'hour',
-        deps:[""],
     },
     'lunar_phase':
     {
         url:'/astro/lunar_phase',
-        update:'second',
-        deps:[],
+        update:'day',
     },    
     'locations' : 
     {
         url:'/astro/locations',
         update:'minute',
-        deps:["astro_locations"],
     },
     'version':
     {
         url:'/version',
         update:'hour',
-        deps:[],
     },
     'transits' : 
     {
         url:'/astro/transits',
-        update:'day',
-        deps:["astro_transits"],
+        update:'day',        
     },
     'solar_day' : 
     {
         url:'/astro/solar_day',
-        update:'day',
-        deps:["astro_day", "day_timeseries"],
+        update:'day',        
     },
     'analemma' : 
     {
         url:'/astro/analemma',
-        update:'minute',
-        deps:["astro_analemma"],
+        update:'minute',        
     },
     'keepalive' : 
     {
         url:'keepalive',
-        update:'second',
-        deps:["heartbeat"],
+        update:'second',        
     }  
+}
+
+// create blank arrays for the dependencies
+for(var k in data_sources)
+{
+    data_sources[k].deps = [];
 }
 
 // initially, nothing has been latched; will be updated
