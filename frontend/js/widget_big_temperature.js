@@ -13,4 +13,4 @@ function update_temp()
 }
 
 // daily means update at one second after midnight exactly
-widget_temp = {"init":init_date, "update":update_date, "rate":"hourly"}
+widget_temp = {"init":init_temp, "update":update_temp, "rate":"hourly"}

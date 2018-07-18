@@ -86,9 +86,8 @@ def full_forecast(station):
 
 
 @route('/metoffice/inshore_forecast/<area>')
-def inshore_forecast(area=''):
-    return {}
-    return metoffice.inshore_forecast("iw18")
+def inshore_forecast(area=''):    
+    return metoffice.inshore_forecast(area)
 
 @route('/astro/solar_day')
 def solarday():

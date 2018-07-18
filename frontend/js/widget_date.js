@@ -1,15 +1,15 @@
 
-var dateText;
+widget_date = {
+        
+    init:function(bbox)
+    {        
+        this.dateText = draw.text("")
+        this.dateText.id("text_style").font({'font-size':bbox.h}).move(bbox.x, bbox.y-bbox.h/2);
+    },
 
-function init_date(bbox)
-{
-    dateText = draw.text("")
-    dateText.id("text_style").font({'font-size':bbox.h}).move(bbox.x, bbox.y-bbox.h/2);
+    update:function(json)
+    {
+        this.dateText.text(json.date);
+    }
+    
 }
-
-function update_date()
-{
-    request('/date', json => { dateText.text(json.date);}); 
-}
-// daily means update at one second after midnight exactly
-widget_date = {"init":init_date, "update":update_date, "rate":"daily"}

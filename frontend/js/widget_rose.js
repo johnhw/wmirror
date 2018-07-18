@@ -123,11 +123,6 @@ var compass_group;
 
 var font_file = '/fonts/geosanslight/geosanslight-webfont.ttf';
 
-function sph2cart(az, el)
-{
-    var v1 = [Math.cos(el) * Math.sin(az), -Math.sin(el), Math.cos(el) * Math.cos(az)];            
-    return v1;
-}
 
 function draw_spherical_path(path, upper_side)
 {
