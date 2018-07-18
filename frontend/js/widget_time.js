@@ -1,10 +1,12 @@
 
 widget_time = {
     init:function(bbox){
-        this.timeText = draw.text("");
-        this.timeText.id("text_style").font({'font-size':bbox.h}).move(bbox.x, bbox.y-bbox.h/2);
+        this.text = draw.text("");
+        this.text.id("text_style");
+        this.bbox = bbox;
     },
     update:function(json){
-        this.timeText.text(json.time); 
+        this.text.text(json.time); 
+        fit_svg(this.text, this.bbox);
     },
 }

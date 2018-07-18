@@ -8,12 +8,17 @@ data_sources = {
     'forecast' : {
         url:'/metoffice/forecast/'+config.station_id,
         update:'hour',
-        deps:['main_temperature']
+        deps:['main_temperature', 'main_forecast_icon']
     },
     'time' : {
         url:'/time',
         update:'minute',
         deps:["time"]
+    },
+    'location' : {
+        url:'/location',
+        update:'day',
+        deps:["location"]
     },
     'date' : {
         url:'/date',

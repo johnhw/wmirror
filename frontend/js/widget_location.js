@@ -23,17 +23,21 @@ function formatLocation(json)
         return lat[0] + "°" + lat[1]+" ′" + lat[2] + '″' + ns + "  " + lon[0] + "°" + lon[1]+"′" + lon[2] + '″' + ew;        
     }
 
-function update_location()
-{
 
+widget_location = 
+{
+    init:function(bbox){
+        this.text = draw.text("X");
+        this.text.id("text_style");
+        this.bbox = bbox;
+        
+    },
+
+    update:function(json){        
+        this.text.text(formatLocation(json));
+        fit_svg(this.text, this.bbox);
+        
+    }
+    
 }
 
-function init_location(bbox)
-{
-    locationText = draw.text("");
-    locationText.id("text_style").font({'font-size':bbox.h}).move(bbox.x, bbox.y-bbox.h/2);
-
-    request('/location', json => locationText.text(formatLocation(json)));
-}
-
-widget_location = {"update":update_location, "init":init_location}    

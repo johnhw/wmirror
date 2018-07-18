@@ -3,13 +3,15 @@ widget_date = {
         
     init:function(bbox)
     {        
-        this.dateText = draw.text("")
-        this.dateText.id("text_style").font({'font-size':bbox.h}).move(bbox.x, bbox.y-bbox.h/2);
+        this.text = draw.text("")
+        this.bbox = bbox;
+        this.text.id("text_style");
     },
 
     update:function(json)
     {
-        this.dateText.text(json.date);
+        this.text.text(json.date);
+        fit_svg(this.text, this.bbox);
     }
     
 }
