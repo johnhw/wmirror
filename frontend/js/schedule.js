@@ -8,12 +8,12 @@ data_sources = {
     'forecast' : {
         url:'/metoffice/forecast/'+config.station_id,
         update:'hour',
-        deps:['main_temperature', 'main_forecast_icon']
+        deps:[]
     },
     'time' : {
         url:'/time',
         update:'minute',
-        deps:["time"]
+        deps:[]
     },
     'location' : {
         url:'/location',
@@ -23,19 +23,31 @@ data_sources = {
     'date' : {
         url:'/date',
         update:'day',
-        deps:["date"]
+        deps:[]
     },
     'inshore_forecast' : 
     {
         url:'/metoffice/inshore_forecast/'+config.inshore_area,
         update:'hour',
-        deps:["today_forecast"],
+        deps:[""],
     },
+    'lunar_phase':
+    {
+        url:'/astro/lunar_phase',
+        update:'second',
+        deps:[],
+    },    
     'locations' : 
     {
         url:'/astro/locations',
         update:'minute',
         deps:["astro_locations"],
+    },
+    'version':
+    {
+        url:'/version',
+        update:'hour',
+        deps:[],
     },
     'transits' : 
     {

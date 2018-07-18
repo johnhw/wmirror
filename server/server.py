@@ -4,7 +4,7 @@ import os
 import datetime
 
 import time
-
+import git
 import metoffice
 import astro
 from file_cache import cached_file
@@ -63,6 +63,15 @@ def date():
     dt = datetime.datetime.now()
     dayname = "{dt:%A} {dt.day} {dt:%B}".format(dt=dt)
     return {"date":dayname}
+
+@route('/version')
+def version():    
+    repo = git.Repo(search_parent_directories=True)
+    sha = repo.head.object.hexsha.upper()
+    sha = sha[0:4] + " " + sha[4:8]
+    date = repo.head.object.committed_datetime.isoformat()[:10]
+    return {"sha":sha, "date":date}
+
 
 # The display format for the time/date/etc.
 @route('/time')

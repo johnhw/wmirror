@@ -264,11 +264,9 @@ function init_rose(bbox)
             alert('Could not load font: ' + err);
         } else {
         global_font = font;    
-        compass_group = draw.group();
-        
+        compass_group = draw.group();        
         compass(compass_group);        
-        var compass_rose = compass_group.scale(bbox.h/3,bbox.h/3).translate(bbox.cx, bbox.cy);
-
+        fit_svg(compass_group, bbox, 0.75);
         // get each of the sub-components
         request("/astro/solar_day", json=>{draw_day(json)});  
         request("/astro/transits", json=>{draw_transits(json)});
@@ -281,6 +279,7 @@ function init_rose(bbox)
 
 widget_rose = {
     init:init_rose,
-    update:function(){},
-    rate:"daily",
+    update:function(){},    
 }
+
+register_widget(widget_rose, "gnomon", [])

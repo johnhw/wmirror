@@ -35,9 +35,10 @@ widget_location =
 
     update:function(json){        
         this.text.text(formatLocation(json));
-        fit_svg(this.text, this.bbox);
+        fit_svg(this.text, this.bbox, 0.8);
         
     }
     
 }
 
+register_widget(widget_location, "location", ["location"]);

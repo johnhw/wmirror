@@ -9,7 +9,9 @@
     
     mat4.perspective(projection_matrix, 0.5, 1.0, 1, 50);    
     mat4.lookAt(modelview_matrix, [-10,-10,10], [0,0,0], [0,1,0]);
+    mat4.scale(modelview_matrix, modelview_matrix, [1,1,1]);
     mat4.scale(projection_matrix, projection_matrix, [-1,1,1]);
+
 
     
     

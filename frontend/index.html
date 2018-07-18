@@ -10,20 +10,25 @@
 <script type="text/javascript" src="js/extern/opentype.min.js"></script>
 
 <!-- widgets -->
-<script type="text/javascript" src="js/widget_location.js"></script>
 
 <script type="text/javascript" src="js/utils/labels.js"></script>
 <script type="text/javascript" src="js/utils/perspective.js"></script>
+<script type="text/javascript" src="js/config.js"></script>
+<script type="text/javascript" src="js/schedule.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="js/icon_map.js"></script>
+<script type="text/javascript" src="js/widgets.js"></script>
+
+<script type="text/javascript" src="js/widget_location.js"></script>
 <script type="text/javascript" src="js/widget_text_forecast.js"></script>
 <script type="text/javascript" src="js/widget_date.js"></script>
 <script type="text/javascript" src="js/widget_time.js"></script>
 <script type="text/javascript" src="js/widget_rose.js"></script>
 <script type="text/javascript" src="js/widget_main_temperature.js"></script>
 <script type="text/javascript" src="js/widget_main_forecast_icon.js"></script>
-<script type="text/javascript" src="js/config.js"></script>
-<script type="text/javascript" src="js/schedule.js"></script>
-<script type="text/javascript" src="js/utils.js"></script>
-<script type="text/javascript" src="js/icon_map.js"></script>
+<script type="text/javascript" src="js/widget_moon.js"></script>
+<script type="text/javascript" src="js/widget_main_wind.js"></script>
+<script type="text/javascript" src="js/widget_signature.js"></script>
 
 
 Solve mystery of misaligned sunset/sun position
@@ -33,55 +38,12 @@ Update w/o flicker
 
 <script>
 
-    // Fetch a URL (via GET), parse as JSON and
-    // send to the given callback
-    function request(url, callback)
-    {
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {                
-                callback(JSON.parse(this.responseText));
-            }
-        };
-        request.open('GET', url);
-        request.send();
-    }
 
-    
-
-    // Fetch a URL (via GET), 
-    // send to the given callback (as a raw string)
-    function raw_request(url, callback)
-    {
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                callback(this.responseText);
-            }
-        };
-        request.open('GET', url);
-        request.send();
-    }
-
-    var draw = SVG('drawing').size(1080, 1920);
-    var rect = draw.rect(1080, 1920).attr({ fill: '#000' })
-    var time_group = draw.group()
-    //bold_dictionary({"k":"value"}, {"fill":"#fff"}, {"fill":"#888"});
-    
-    // Widgets registered here
-    widgets = {"today_forecast":widget_forecast, 
-                "gnomon":widget_rose,
-              "location":widget_location,
-              "date":widget_date,
-              "time":widget_time,
-              "main_temperature":widget_main_temperature,
-              "main_forecast_icon":widget_main_forecast_icon};
+// The background and draw context
+var draw = SVG('drawing').size(1080, 1920);
+var background_rect = draw.rect(1080, 1920).attr({ fill: '#000' })   
 
 
-
-   
-
-   
 // the scheduler call; started after initialising complete
 function updateSecond()
 {                
@@ -92,7 +54,7 @@ function init(skeleton_group)
 {
     // Initialise all widgets
     for(widget in widgets) 
-        {
+        {            
             if(widgets[widget].init) 
             {
                 var skeleton_widget = SVG.get(widget);
@@ -103,7 +65,7 @@ function init(skeleton_group)
                     draw.rect(bbox.w, bbox.h).move(bbox.x,bbox.y).fill('none').stroke('#f0f');
                 }
                 else
-                    bbox = {w:0, h:0, x:0, y:0};
+                    bbox = {w:0, h:0, x:0, y:0};                
                 widgets[widget].init(bbox);
             
             }

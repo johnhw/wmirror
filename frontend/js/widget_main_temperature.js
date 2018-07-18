@@ -14,3 +14,5 @@ widget_main_temperature = {
     }
 
 }
+
+register_widget(widget_main_temperature, "main_temperature", ["forecast"]);

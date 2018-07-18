@@ -18,9 +18,9 @@ def local_transit(transit, body, location, date, horizon='0', use_center=False):
     "setting":location.next_setting}[transit]    
     try:
         if use_center:
-            time = ephem.localtime(transit_fn(body, use_center=use_center))
+            time = transit_fn(body, use_center=use_center)
         else:
-            time = ephem.localtime(transit_fn(body))
+            time = transit_fn(body)
         return time
     except ephem.AlwaysUpError:
         # polar regions, in polar summer
@@ -37,12 +37,21 @@ def format_date(body, here, date):
     else:
         here.date = date
         body.compute(here)
-    # convert to isoformat date
-        return {"date":date.isoformat(), "alt":body.alt, "az":body.az}
+    # convert to isoformat date (in LOCAL time!)
+        return {"date":ephem.localtime(date).isoformat(), "alt":body.alt, "az":body.az}
+
+
+# note: we always calculate using UTC time
+# and convert to local time when returning results
+# this means that times must be in UTC when used as parameters!
+
+# Standard format for positions is:
+# "time": (local time as ISO format string)
+# "alt": altitude, radians (0=horizon, +ve=above)
+# "az": azimuth, radians (0=due North, +ve=clockwise)
 
 class Astro:
     def __init__(self, lon, lat, elev=0):
-        #self.here = ephem.Observer()
         self.lon = lon
         self.lat = lat
         self.sun = ephem.Sun()
@@ -54,8 +63,7 @@ class Astro:
         here = ephem.Observer()
         here.lat = self.lat
         here.lon = self.lon
-        here.date = date
-        
+        here.date = date        
         self.moon.compute(here)
         self.sun.compute(here)
         return {"moon": {"time":ephem.localtime(ephem.date(date)).isoformat(), "alt":self.moon.alt, "az":self.moon.az},
@@ -74,7 +82,8 @@ class Astro:
         # ignoring leap years...
         for i in range(365):
             self.sun.compute(here)
-            solar_analemma.append({"time":ephem.localtime(ephem.date(here.date)).isoformat(), "alt":self.sun.alt, "az":self.sun.az})
+            solar_analemma.append({"time":ephem.localtime(ephem.date(here.date)).isoformat(), 
+                                    "alt":self.sun.alt, "az":self.sun.az})
             here.date += 1
         return {"sun":solar_analemma}
 
@@ -129,7 +138,7 @@ class Astro:
         quarter = int(angle * 4.0 // tau)
         ###
 
-        return {"phase":self.moon.moon_phase, "radius":self.moon.radius, 'direction':lunar_names[quarter][0], 'name':lunar_names[quarter][1]}
+        return {"phase":self.moon.moon_phase, "radius":self.moon.radius, 'direction':lunar_names[quarter][0], 'name':lunar_names[quarter][1], "sunmoon_angle":angle}
 
     def solar_day(self, date=None):
         return self.day(self.sun, date)
