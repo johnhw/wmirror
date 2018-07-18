@@ -7,8 +7,8 @@
 data_sources = {
     'forecast' : {
         url:'/metoffice/forecast/'+config.station_id,
-        update:'hourly',
-        deps:[]
+        update:'hour',
+        deps:['main_temperature']
     },
     'time' : {
         url:'/time',
@@ -115,6 +115,7 @@ function schedule_fetch()
         if(flags.indexOf(data.update)!=-1)
         {                 
             // make sure we don't fail when an update fails
+            console.log(source);
             try
             {
                 update_datasource(data);            

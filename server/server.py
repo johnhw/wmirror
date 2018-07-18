@@ -81,12 +81,13 @@ def nearest_station(latlon):
 def full_forecast(station):
     # dummy static forecast for now
     with open("test_forecast.json") as f:
-        return f.read()        
+        return f.read()
     return metoffice.forecast(station)
 
 
 @route('/metoffice/inshore_forecast/<area>')
 def inshore_forecast(area=''):    
+    return {}
     return metoffice.inshore_forecast(area)
 
 @route('/astro/solar_day')
