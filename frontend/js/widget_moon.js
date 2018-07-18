@@ -37,12 +37,12 @@ widget_moon_icon = {
         }
 
         
-        fit_svg(this.group, this.bbox);
+        fit_svg(this.group, this.bbox, 0.9);
         
         var phase_stage = Math.floor((angle / (2*Math.PI))*8);
         var name = moon_phase_names[phase_stage];
 
-        // label with the phase
+        // label with the phase, just outside of the icon box
         this.group.text(name).id("text_style").move(0,26).font({"font-size":3});
     }
 
