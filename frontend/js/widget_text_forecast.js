@@ -30,4 +30,4 @@ widget_forecast = {
 }
 
 
-register_widget(widget_forecast, "forecast", ["inshore_forecast"]);
+register_widget(widget_forecast, "today_forecast", ["inshore_forecast"]);

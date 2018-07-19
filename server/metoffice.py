@@ -212,7 +212,7 @@ def txtquery(endpoint, wxtype='regionalforecast', params={}):
     url = metoffice_base_url+"txt/wxfcs/{wxtype}/json/{endpoint}".format(endpoint=endpoint, wxtype=wxtype) 
     return _query(url, params)
     
-def surface():
+def surface_pressure():
     url = metoffice_base_url+"image/wxfcs/surfacepressure/json/capabilities"
     result =  _query(url)
     chart_list = result["BWSurfacePressureChartList"]["BWSurfacePressureChart"]
@@ -221,6 +221,7 @@ def surface():
         time = chart["DataDate"]
         period = chart["ForecastPeriod"]
         uri = get_image_uri(chart["ProductURI"])
+        # note period appears to be in hours
         charts.append({"date":time, "period":period, "image_url":uri})
     return charts
 
@@ -231,7 +232,7 @@ def substitute(string, subs):
         string = string.replace("{%s}"%k, v)
     return string
     
-def obsimage():
+def observed_images():
     url = metoffice_base_url+"layer/wxobs/all/json/capabilities"
     result = _query(url)
     layers = result["Layers"]

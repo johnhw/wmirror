@@ -28,9 +28,10 @@ widget_main_wind = {
    
     update:function(json)
     {
-        var direction = json.SiteRep.DV.Location.Period[0].Rep[3].D;
-        var speed = json.SiteRep.DV.Location.Period[0].Rep[3].S;
-        var gust = json.SiteRep.DV.Location.Period[0].Rep[3].G;        
+        console.log(json);
+        var direction = json.SiteRep.DV.Location.Period[0].Rep[0].D;
+        var speed = json.SiteRep.DV.Location.Period[0].Rep[0].S;
+        var gust = json.SiteRep.DV.Location.Period[0].Rep[0].G;        
         this.group.clear();     
 
 
