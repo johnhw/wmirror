@@ -1,7 +1,10 @@
+
+
 function formatLocation(json)
     {
         lat = json.lat;
         lon = json.lon;
+
         if(lon[0]<0)
         {
             ew = 'W'

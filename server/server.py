@@ -1,45 +1,34 @@
-from bottle import route, run
-from bottle import static_file
 import os
 import datetime
-
 import time
+
+from bottle import route, run, static_file
+import toml
+import pytz
 import git
+
 import metoffice
 import astro
 from file_cache import cached_file
 from pathlib import Path
 
-
-# Geographical location
-# location in sexigesimal degrees
-location = {"lat":[60, 11, 37], 'lon':[-1,17,40]}
-
-# for MetOffice forecast
-inshore_area = 'iw18' # Shetland Islands
-
-# key:value pairs, indicating a "local name" for a file, and the corresponding URL it should be fetched from
-# this will be cached automatically
-cached_images = {
-    "solar_image.jpg":"https://sdo.gsfc.nasa.gov/assets/img/latest/f_211_193_171pfss_1024.jpg",
-    "aurora_prediction.jpg":"http://services.swpc.noaa.gov/images/animations/ovation-north/latest.jpg"}
+## Configuration and constants
+# read the config
+with open("config.toml") as f:
+    config = toml.load(f)
 
 # root for static files (e.g. index.html, CSS, JS, etc.)
 static_root = '../frontend'
 
+## Routes
 @route('/cached_img/<filename>')
 def cached_image(filename, expiry_hours=4):
+    cached_images = config["images"]
     if filename in cached_images:        
         # download file as needed
         local_file = cached_file(cached_images[filename], expiry_hours=expiry_hours)        
         root, fname = os.path.split(local_file)              
         return static_file(fname, root=root)
-
-# Astronomical calculations
-astro_observer = astro.Astro(lat=":".join([str(l) for l in location['lat']]), lon=":".join([str(l) for l in location['lon']]), elev=0)
-
-#metoffice_station = metoffice.nearest_station(lon=astro_observer.lon, lat=astro_observer.lat)
-metoffice_region = "os" # hardcoded for Orkney and Shetland region
 
 # frontend must call this regularly to prevent
 # the keepalive script from shutting down and restarting
@@ -48,14 +37,14 @@ def keepalive():
     Path('alive.txt').touch()
     return {"status":"ok"}
 
-
-
-
 # report current location, in sexagesimal, as a dictionary mapping lat,lon
 # to triples of integers
 @route('/location')
 def get_location():
-    return location
+    def intarray(s):
+        return [int(elt) for elt in s.split(":")]
+    return {"lat":intarray(config["location"]["lat"]), 
+            "lon":intarray(config["location"]["lat"])}
 
 # The display format for the time/date/etc.
 @route('/date')
@@ -75,29 +64,37 @@ def version():
 
 # The display format for the time/date/etc.
 @route('/time')
-def date():    
+def curtime():    
     dt = datetime.datetime.now()    
     current_time = "{dt:%H}:{dt:%M}".format(dt=dt)
     tz = time.strftime('%Z%z')
     return {"time":current_time, "timezone":tz}    
 
-@route('/metoffice/closest_station/<latlon>')
+## forecasts 
+@route('/metoffice/closest_station')
 def nearest_station(latlon):
     # need to parse the latlon to unencode from URL string
-    return metoffice.nearest_station(lon=astro_observer.lon, lat=astro_observer.lat)
+    return metoffice.nearest_station(lon=astro_observer.lon, 
+    lat=astro_observer.lat)
 
-@route('/metoffice/forecast/<station>')
-def full_forecast(station):
+@route('/metoffice/forecast')
+def full_forecast():
     # dummy static forecast for now
     with open("test_forecast.json") as f:
         return f.read()
-    return metoffice.forecast(station)
+    return metoffice.forecast(config["metoffice"]["station"])
 
 
-@route('/metoffice/inshore_forecast/<area>')
-def inshore_forecast(area=''):    
+@route('/metoffice/inshore_forecast')
+def inshore_forecast():    
     return {}
-    return metoffice.inshore_forecast(area)
+    return metoffice.inshore_forecast(config["metoffice"]["inshore_area"])
+
+## astronomical computations (sun/moon location)
+
+# Astronomical calculations
+astro_observer = astro.Astro(lat=config["location"]["lat"], 
+                            lon=config["location"]["lon"], elev=0)
 
 @route('/astro/solar_day')
 def solarday():
@@ -119,11 +116,12 @@ def transits():
 def analemma():
     return astro_observer.solar_analemma()          
 
-# send static files
+## send static files
 @route('/<filename:path>')
 def send_static(filename):
     return static_file(filename, static_root)    
 
-run(host='localhost', port=8080, debug=True, reloader=True)
+## start the server
+run(host='localhost', port=config["server"]["port"], debug=True, reloader=True)
 
     
