@@ -1,4 +1,3 @@
 config = {
-    inshore_area:"iw18",
-    station_id:"353917",
+    max_event_days:30
 }

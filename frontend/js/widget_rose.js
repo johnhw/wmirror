@@ -218,7 +218,7 @@ function draw_symbol(obj, sym, font_size)
     {
      color = '#44d';   
     }
-    var back = draw.circle(font_size*0.9).fill("#000").move(vpos[0]-font_size*0.4, vpos[1]-font_size*0.3);
+    var back = draw.circle(font_size*0.9).fill("#000").move(vpos[0]-font_size*0.4, vpos[1]-font_size*0.3);//.fill({"fill-opacity":0.5});
 
     text = perspective_text(v1, sym, font_size).id("text_style").style({"fill":color});
     
@@ -226,8 +226,9 @@ function draw_symbol(obj, sym, font_size)
  
     
     group.add(hline);      
+    group.add(back);
     group.add(text);
-
+    
     return group;
 }
 

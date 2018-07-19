@@ -20,7 +20,7 @@ def get_events(n=10):
                                       orderBy='startTime').execute()
 
     events = events_result.get('items', [])    
-    return events[0]
+    return {"events":events}
 
 if __name__=="__main__":
     print(get_events(20))

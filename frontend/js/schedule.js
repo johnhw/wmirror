@@ -51,6 +51,11 @@ data_sources = {
         url:'/astro/transits',
         update:'day',        
     },
+    'events':
+    {
+        url:'/events',
+        update:"hour",
+    },
     'solar_day' : 
     {
         url:'/astro/solar_day',

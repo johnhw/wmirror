@@ -1,3 +1,4 @@
+// Simple temerpature widget
 
 widget_main_temperature = {
     init:function(bbox)
