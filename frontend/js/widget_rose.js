@@ -146,7 +146,7 @@ function draw_spherical_path(path, upper_side)
         else if(drawing)
         {
             //  detect breaks and split the polyline
-            stroke_polyline = perspective_polyline(coords);
+            stroke_polyline = perspective_polyline(coords).style({"stroke-linecap":"round"});
             group.add(stroke_polyline);
             coords = [];
             drawing = false;
@@ -154,7 +154,7 @@ function draw_spherical_path(path, upper_side)
     });
     
     // get the last polyline and put it into the group
-    stroke_polyline = perspective_polyline(coords);
+    stroke_polyline = perspective_polyline(coords).style({"stroke-linecap":"round"});
     group.add(stroke_polyline);
     return group;
 }
@@ -241,7 +241,7 @@ function draw_day(json)
 
         var v = sph2cart(point.az, point.alt);            
         var v1 = ftransform(v);
-        marker = draw.circle(0).move(v1[0], v1[1]).fill("#f0f");
+        marker = draw.circle(0.1).move(v1[0]-0.05, v1[1]-0.05).fill("#fff");
         compass_group.add(marker);
         var rbox = marker.rbox(draw);
         
