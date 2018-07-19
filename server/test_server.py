@@ -17,6 +17,7 @@ json_endpoints = [
     '/metoffice/forecast',
     '/metoffice/inshore_forecast',
     '/metoffice/shipping_forecast',
+    '/metoffice/text_forecast',
     '/astro/solar_day',
     '/astro/lunar_phase',
     '/astro/locations',

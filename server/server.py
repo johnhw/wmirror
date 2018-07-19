@@ -87,6 +87,10 @@ def full_forecast():
     return metoffice.forecast(config["metoffice"]["station_id"])
 
 
+@route('/metoffice/text_forecast')
+def text_forecast():
+    return metoffice.forecast(config["metoffice"]["region_id"])
+
 @route('/metoffice/inshore_forecast')
 def inshore_forecast():    
     #return {}

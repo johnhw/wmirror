@@ -214,22 +214,55 @@ def txtquery(endpoint, wxtype='regionalforecast', params={}):
     
 def surface():
     url = metoffice_base_url+"image/wxfcs/surfacepressure/json/capabilities"
-    return _query(url)
+    result =  _query(url)
+    chart_list = result["BWSurfacePressureChartList"]["BWSurfacePressureChart"]
+    charts = []
+    for chart in chart_list:
+        time = chart["DataDate"]
+        period = chart["ForecastPeriod"]
+        uri = get_image_uri(chart["ProductURI"])
+        charts.append({"date":time, "period":period, "image_url":uri})
+    return charts
+
+
+# substitute keys of the form {key} with the corresponding value
+def substitute(string, subs):
+    for k,v in subs.items():        
+        string = string.replace("{%s}"%k, v)
+    return string
     
 def obsimage():
     url = metoffice_base_url+"layer/wxobs/all/json/capabilities"
-    return _query(url)
+    result = _query(url)
+    layers = result["Layers"]
+    # BaseURL will be substituted to get URLs that can actually be fetched
+    base_url = layers["BaseUrl"]["$"]    
+    img_layers = {}
+    for layer in layers["Layer"]:
+        # get each layer available
+        name = layer["@displayName"]
+        service = layer["Service"]
+        img_format = service["ImageFormat"]
+        layer_name = service["LayerName"]
+        times = service["Times"]["Time"]
+        img_urls = []
+        # get the time, and the URL for each image
+        for time in times:
+            complete_url = substitute(base_url, {"ImageFormat":img_format, "LayerName":layer_name, "Time":time, "key":api_key})
+            img_urls.append((time, complete_url))
+        img_layers[name] = img_urls        
+    return img_layers
 
 def get_image_uri(uri):
     # substitute api key
-    uri = uri.replace("{key}", api_key)
-    return uri
+    return substitute(uri, {"key":api_key})    
 
 #print(forecast("353917"))
 #print(observation("353917"))
 #print(txtquery('sitelist'))
 #print(txtquery('500'))
-#print(capabilities())
-#print(surface())
+#import pprint
+#pprint.pprint(obsimage())
+#pprint.pprint(surface())
 #print(localforecast('iw18'))
 #print(shipping_forecast("Fair Isle"))
