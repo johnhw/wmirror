@@ -1,7 +1,7 @@
 
 
 // Render a cardinal label for the compass
-// This extracts the font glyps (!) and perspective
+// This extracts the font glyphs (!) and perspective
 // projects the corresponding polygons, so that they line up
 // nicely
  
@@ -120,7 +120,6 @@ function compass(group, attrs)
 
 var global_font;
 var compass_group;
-
 var font_file = '/fonts/geosanslight/geosanslight-webfont.ttf';
 
 
@@ -132,6 +131,8 @@ function draw_spherical_path(path, upper_side)
     // of the horizon, a group must be returned,
     // with a collection of polyline segments
     var drawing = true;
+
+    var style = {"stroke-linecap":"round"};
     path.forEach(function(entry) {
         
         var az = entry.az;
@@ -146,7 +147,7 @@ function draw_spherical_path(path, upper_side)
         else if(drawing)
         {
             //  detect breaks and split the polyline
-            stroke_polyline = perspective_polyline(coords).style({"stroke-linecap":"round"});
+            stroke_polyline = perspective_polyline(coords).style(style);
             group.add(stroke_polyline);
             coords = [];
             drawing = false;
@@ -154,7 +155,7 @@ function draw_spherical_path(path, upper_side)
     });
     
     // get the last polyline and put it into the group
-    stroke_polyline = perspective_polyline(coords).style({"stroke-linecap":"round"});
+    stroke_polyline = perspective_polyline(coords).style(style);
     group.add(stroke_polyline);
     return group;
 }
@@ -192,7 +193,6 @@ function draw_locations(json)
     var sun_pos = json.sun;
     sun_symbol = draw_symbol(json.sun, '☉', 0.2, Math.floor(deg(json.sun.alt))+"°", 0.1);
     moon_symbol = draw_symbol(json.moon, '☽', 0.15, Math.floor(deg(json.moon.alt))+"°", 0.1);
-    
     
     compass_group.add(sun_symbol);        
     compass_group.add(moon_symbol);                

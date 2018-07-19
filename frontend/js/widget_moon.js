@@ -1,3 +1,6 @@
+// Moon phase display
+// Shows current moon phase accurately
+
 
 // Names of the phases, in order 0->2*pi as reported by the astro module
 var moon_phase_names = ["New moon", "Waxing crescent", "First quarter", "Waxing gibbous", "Full moon", "Waning gibbous", "Third quarter", "Waning crescent"];
@@ -15,15 +18,14 @@ widget_moon_icon = {
 //        draw.remove(this.group);
         this.group = draw.group();
             
-        // outer circle for moon icon
+        // outer circle for moon icon        
         this.group.circle(20.0).fill("#000").stroke("#fff");
 
-        
-        date = new Date();
-        angle = json.sunmoon_angle; // should be 0 -> 2*pi
+        var angle = json.sunmoon_angle; // should be 0 -> 2*pi
         // compute sides of the arc to draw
-        side = 0;
-        flip = 0;       
+        var side = 0;
+        var flip = 0;       
+        
         // work out the quadrant... 
         if(angle>Math.PI) { angle = 2*Math.PI-angle; flip=1;}
         if(angle>=0.5*Math.PI) { angle = Math.PI-angle; side=1;}
@@ -45,8 +47,9 @@ widget_moon_icon = {
         
         fit_svg(this.group, this.bbox, 0.9);
 
-        // compute the name (need 1/2 phase offset with wrap to get the phase name right!)
-        var phase_stage = Math.floor((angle / (2*Math.PI))*8);
+        // compute the name 
+        var phase_stage = Math.floor((angle / (2*Math.PI))*8 - 0.5);
+        if(phase_stage<0) phase_stage = 8;        
         var name = moon_phase_names[phase_stage];
 
         // label with the phase, just outside of the icon box

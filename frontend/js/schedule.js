@@ -6,7 +6,7 @@
 // turnover for that period (e.g. daily between 00:00:00 and 00:00:01)
 data_sources = {
     'forecast' : {
-        url:'/metoffice/forecast/'+config.station_id,
+        url:'/metoffice/forecast',
         update:'hour',
     },
     'time' : {
@@ -23,7 +23,7 @@ data_sources = {
     },
     'inshore_forecast' : 
     {
-        url:'/metoffice/inshore_forecast/'+config.inshore_area,
+        url:'/metoffice/inshore_forecast',
         update:'hour',
     },
     'lunar_phase':
@@ -86,8 +86,7 @@ function update_datasource(data)
                 {                        
                     var update_widget = widgets[dep];                    
                     if(update_widget)
-                    {
-                        console.log(update_widget, data.json);
+                    {                        
                         // pass the JSON for this update to the widget that depends on it
                         try
                         {
@@ -110,7 +109,16 @@ function schedule_fetch()
     var now = new Date();
     var flags = [];
             
-    var updates = {second:now.getSeconds(), minute:now.getMinutes(), hour:now.getHours(), day:now.getDate(), month:now.getMonth(), once:"once"};
+    // valid update rates for data sources
+    var updates = {second:now.getSeconds(),
+         minute:now.getMinutes(), 
+         hour:now.getHours(), 
+         day:now.getDate(), 
+         month:now.getMonth(), 
+         once:"once"};
+
+    // check if the relevant state is newer than the one
+    // last recorded (always true on startup)
     for(var name in updates)
     {        
         if(updates[name]!=schedule_latches[name])
@@ -125,8 +133,7 @@ function schedule_fetch()
         var data = data_sources[source];                
         if(flags.indexOf(data.update)!=-1)
         {                 
-            // make sure we don't fail when an update fails
-            console.log(source);
+            // make sure we don't fail when an update fails            
             try
             {
                 update_datasource(data);            

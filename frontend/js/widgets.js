@@ -1,4 +1,4 @@
-widgets = {}
+var widgets = {}
 
 // Register a widget; takes an object, the name (which must
 // match the name used by the bounding box in the skeleton SVG)

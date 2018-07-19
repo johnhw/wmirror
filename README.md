@@ -5,3 +5,5 @@ RPi magic mirror
 * bottle-0.12.13
 * pyephem
 * gitpython
+* lxml
+* toml

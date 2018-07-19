@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import ephem
+from lxml import etree
 
 
 """
@@ -107,15 +108,34 @@ wl Wales
 uk United Kingdom
 """
 
+"""XML feed for shipping forecast: """
 
 
-
-
-"""XML feed for shipping forecast: https://www.metoffice.gov.uk/public/data/CoreProductCache/ShippingForecast/Latest"""
 
 with open("../secrets/keys.json") as f:
     keys = json.load(f)
     api_key = keys['met_office_data_point']
+
+def recursive_dict(element):
+    return element.tag, dict(map(recursive_dict, element)) or element.text
+
+def shipping_forecast():
+    shipping_forecast_url = "https://www.metoffice.gov.uk/public/data/CoreProductCache/ShippingForecast/Latest"
+    forecast_xml = requests.get(shipping_forecast_url).content
+    root = etree.fromstring(forecast_xml)
+    # get general synopsis
+    synopsis = root.xpath("/report/general-synopsis/gs-text")[0].text
+    forecasts = root.xpath("/report/area-forecasts")
+    areas = {}
+    # iterate over each area
+    for area_forecast in forecasts[0]:
+        areas = area_forecast.findall("area")
+        for area in areas:
+            # index by area name
+            dict_forecast = recursive_dict(area)
+            areas[dict_forecast['main']] = dict_forecast
+
+    return {"synopsis":synopsis, "areas":areas}
 
 
 def dictify_dl(dl_tag):
@@ -215,3 +235,4 @@ def get_image_uri(uri):
 #print(capabilities())
 #print(surface())
 #print(localforecast('iw18'))
+#print(shipping_forecast("Fair Isle"))

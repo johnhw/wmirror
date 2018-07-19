@@ -1,3 +1,4 @@
+// version number 
 
 widget_signature = {
     init:function(bbox){

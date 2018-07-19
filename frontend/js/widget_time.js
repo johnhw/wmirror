@@ -1,4 +1,4 @@
-
+// Simple time display
 widget_time = {
     init:function(bbox){
         this.text = draw.text("");

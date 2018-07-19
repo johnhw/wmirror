@@ -28,3 +28,6 @@ widget_forecast = {
     }    
 
 }
+
+
+register_widget(widget_forecast, "forecast", ["inshore_forecast"]);
