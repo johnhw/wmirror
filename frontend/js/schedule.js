@@ -26,6 +26,11 @@ data_sources = {
         url:'/metoffice/inshore_forecast',
         update:'hour',
     },
+    'shipping_forecast' : 
+    {
+        url:'/metoffice/shipping_forecast',
+        update:'hour',
+    },
     'lunar_phase':
     {
         url:'/astro/lunar_phase',

@@ -1,6 +1,7 @@
 import os
 import datetime
 import time
+from pathlib import Path
 
 from bottle import route, run, static_file
 import toml
@@ -8,9 +9,10 @@ import pytz
 import git
 
 import metoffice
+import gcalendar
 import astro
-from file_cache import cached_file
-from pathlib import Path
+from img_file_cache import cached_file
+
 
 ## Configuration and constants
 # read the config
@@ -72,7 +74,7 @@ def curtime():
 
 ## forecasts 
 @route('/metoffice/closest_station')
-def nearest_station(latlon):
+def closest_station():
     # need to parse the latlon to unencode from URL string
     return metoffice.nearest_station(lon=astro_observer.lon, 
     lat=astro_observer.lat)
@@ -80,15 +82,22 @@ def nearest_station(latlon):
 @route('/metoffice/forecast')
 def full_forecast():
     # dummy static forecast for now
-    with open("test_forecast.json") as f:
-        return f.read()
-    return metoffice.forecast(config["metoffice"]["station"])
+    #with open("test_forecast.json") as f:
+    #    return f.read()
+    return metoffice.forecast(config["metoffice"]["station_id"])
 
 
 @route('/metoffice/inshore_forecast')
 def inshore_forecast():    
-    return {}
+    #return {}
     return metoffice.inshore_forecast(config["metoffice"]["inshore_area"])
+
+@route('/metoffice/shipping_forecast')
+def shipping_forecast():    
+    #return {}
+    forecast = metoffice.shipping_forecast()
+    return {"synopsis":forecast["synopsis"],
+     "local_area":forecast["areas"][config["metoffice"]["shipping_area"]]}
 
 ## astronomical computations (sun/moon location)
 
@@ -101,7 +110,7 @@ def solarday():
     return astro_observer.solar_day()
 
 @route('/astro/lunar_phase')
-def solarday():
+def lunar_phase():
     return astro_observer.lunar_phase()
 
 @route('/astro/locations')
@@ -121,7 +130,13 @@ def analemma():
 def send_static(filename):
     return static_file(filename, static_root)    
 
+# Google calendar; return next n events
+@route('/events')
+def calendar_events(n=20):
+    return gcalendar.get_events(n)
+    
+
 ## start the server
-run(host='localhost', port=config["server"]["port"], debug=True, reloader=True)
+run(host='localhost', port=config["server"]["port"],  debug=True, reloader=True, server='tornado')
 
     

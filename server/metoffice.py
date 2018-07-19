@@ -108,9 +108,6 @@ wl Wales
 uk United Kingdom
 """
 
-"""XML feed for shipping forecast: """
-
-
 
 with open("../secrets/keys.json") as f:
     keys = json.load(f)
@@ -126,16 +123,16 @@ def shipping_forecast():
     # get general synopsis
     synopsis = root.xpath("/report/general-synopsis/gs-text")[0].text
     forecasts = root.xpath("/report/area-forecasts")
-    areas = {}
+    forecast_areas = {}
     # iterate over each area
     for area_forecast in forecasts[0]:
         areas = area_forecast.findall("area")
         for area in areas:
-            # index by area name
-            dict_forecast = recursive_dict(area)
-            areas[dict_forecast['main']] = dict_forecast
+            # index by area name            
+            dict_forecast = recursive_dict(area)[1]                 
+            forecast_areas[dict_forecast['main']] = dict_forecast
 
-    return {"synopsis":synopsis, "areas":areas}
+    return {"synopsis":synopsis, "areas":forecast_areas}
 
 
 def dictify_dl(dl_tag):

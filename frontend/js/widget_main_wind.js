@@ -32,7 +32,9 @@ widget_main_wind = {
         var speed = json.SiteRep.DV.Location.Period[0].Rep[3].S;
         var gust = json.SiteRep.DV.Location.Period[0].Rep[3].G;        
         this.group.clear();     
-        wind_arrow(this.group, speed, direction, bbox);
+
+
+        wind_arrow(this.group, speed, direction, this.bbox);
     }
 
 }

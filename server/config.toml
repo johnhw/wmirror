@@ -12,7 +12,7 @@ lon = '-1:17:40'
 [metoffice]
 inshore_area = "iw18"
 station_id = "353917"
-shipping_forecast = "Fair Isle"
+shipping_area = "Fair Isle"
 region = "os" 
 
 [images]
@@ -21,7 +21,5 @@ region = "os"
 # this will be cached automatically, and expired as on a regular basis (e.g. every 4 hours)
 "solar_image.jpg" = "https://sdo.gsfc.nasa.gov/assets/img/latest/f_211_193_171pfss_1024.jpg"
 "aurora_prediction.jpg" ="http://services.swpc.noaa.gov/images/animations/ovation-north/latest.jpg"
-
-
 
 

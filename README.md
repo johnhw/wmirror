@@ -7,3 +7,7 @@ RPi magic mirror
 * gitpython
 * lxml
 * toml
+* google-api-python
+* oauth2client
+
+
