@@ -5,7 +5,7 @@ service object and outputs a list of the next 10 events on the user's calendar.
 from googleapiclient import discovery
 import datetime
 import json
-import oauth2client.client
+
 
 with open("../secrets/keys.json") as f:
     secrets = json.load(f)

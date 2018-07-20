@@ -62,20 +62,28 @@ function init(skeleton_group)
     // Initialise all widgets
     for(widget in widgets) 
         {            
-            if(widgets[widget].init) 
+            try
             {
-                var skeleton_widget = SVG.get(widget);
-                
-                if(skeleton_widget)
+                if(widgets[widget].init) 
                 {
-                    bbox = skeleton_widget.rbox(draw);                
-                    draw.rect(bbox.w, bbox.h).move(bbox.x,bbox.y).fill('none').stroke('#f0f');
+                    var skeleton_widget = SVG.get(widget);
+                    
+                    if(skeleton_widget)
+                    {
+                        bbox = skeleton_widget.rbox(draw);                
+                        draw.rect(bbox.w, bbox.h).move(bbox.x,bbox.y).fill('none').stroke('#f0f');
+                    }
+                    else
+                        bbox = {w:0, h:0, x:0, y:0};                
+                    widgets[widget].init(bbox);
+                
                 }
-                else
-                    bbox = {w:0, h:0, x:0, y:0};                
-                widgets[widget].init(bbox);
-            
             }
+            catch(err)
+            {
+                console.log(err);
+            }
+
         }
 
     schedule_fetch(); // initial call to scheduler on start

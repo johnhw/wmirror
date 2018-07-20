@@ -36,18 +36,20 @@ function render_events(text, events, max_days)
         }).id("text_style");        
 }
 
-// Future events, up to config.event.max_days ahead
+// Future events, up to config.events.max_days ahead
 widget_events = {
     init:function(bbox)
     {
         this.bbox = bbox;
-        this.text = draw.text("").id("text_style").move(bbox.x, bbox.y);                     
+        this.text = draw.text("").id("text_style");
+        this.group = draw.group();
+        this.group.add(this.text).move(bbox.x, bbox.y);              
         
     },
     update:function(json)
     {    
         var events = json.events;    
-        render_events(this.text, events, config.event.max_days);
+        render_events(this.text, events, config.events.max_days);
         this.text.font({"font-size":16});        
     }    
 }
@@ -57,8 +59,10 @@ widget_today_events = {
     init:function(bbox)
     {
         this.bbox = bbox;
-        this.text = draw.text("").id("text_style").move(bbox.x, bbox.y);                     
+        this.group = draw.group();
+        this.text = this.group.text("").id("text_style");
         
+        this.group.x(bbox.x).y(bbox.y);
     },
     update:function(json)
     {    

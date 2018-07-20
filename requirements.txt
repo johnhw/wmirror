@@ -3,5 +3,5 @@ pyephem
 gitpython
 lxml
 toml
-google-api-python
-oauth2client
+google-api-python-client
+munch

@@ -7,6 +7,7 @@ from bottle import route, run, static_file
 import toml
 import pytz
 import git
+import munch
 
 import metoffice
 import gcalendar
@@ -14,10 +15,11 @@ import astro
 from img_file_cache import cached_file
 
 
+
 ## Configuration and constants
 # read the config
 with open("config.toml") as f:
-    config = toml.load(f)
+    config = munch.Munch.fromDict(toml.load(f))
 
 # root for static files (e.g. index.html, CSS, JS, etc.)
 static_root = '../frontend'
@@ -25,10 +27,11 @@ static_root = '../frontend'
 ## Routes
 @route('/cached_img/<filename>')
 def cached_image(filename, expiry_hours=4):
-    cached_images = config["images"]
+    cached_images = config.images
     if filename in cached_images:        
         # download file as needed
-        local_file = cached_file(cached_images[filename], expiry_hours=expiry_hours)        
+        local_file = cached_file(cached_images[filename], 
+            expiry_hours=expiry_hours)        
         root, fname = os.path.split(local_file)              
         return static_file(fname, root=root)
 
@@ -45,8 +48,8 @@ def keepalive():
 def get_location():
     def intarray(s):
         return [int(elt) for elt in s.split(":")]
-    return {"lat":intarray(config["location"]["lat"]), 
-            "lon":intarray(config["location"]["lat"])}
+    return {"lat":intarray(config.location.lat), 
+            "lon":intarray(config.location.lon)}
 
 # The display format for the time/date/etc.
 @route('/date')
@@ -62,7 +65,6 @@ def version():
     sha = sha[0:4] + " " + sha[4:8]
     date = repo.head.object.committed_datetime.isoformat()[:10]
     return {"sha":sha, "date":date}
-
 
 # The display format for the time/date/etc.
 @route('/time')
@@ -84,30 +86,30 @@ def full_forecast():
     # dummy static forecast for now
     #with open("test_forecast.json") as f:
     #    return f.read()
-    return metoffice.forecast(config["metoffice"]["station_id"])
+    return metoffice.forecast(config.metoffice.station_id)
 
 
 @route('/metoffice/text_forecast')
 def text_forecast():
-    return metoffice.forecast(config["metoffice"]["region_id"])
+    return metoffice.forecast(config.metoffice.region_id)
 
 @route('/metoffice/inshore_forecast')
 def inshore_forecast():    
     #return {}
-    return metoffice.inshore_forecast(config["metoffice"]["inshore_area"])
+    return metoffice.inshore_forecast(config.metoffice.inshore_area)
 
 @route('/metoffice/shipping_forecast')
 def shipping_forecast():    
     #return {}
     forecast = metoffice.shipping_forecast()
     return {"synopsis":forecast["synopsis"],
-     "local_area":forecast["areas"][config["metoffice"]["shipping_area"]]}
+     "local_area":forecast["areas"][config.metoffice.shipping_area]}
 
 ## astronomical computations (sun/moon location)
 
 # Astronomical calculations
-astro_observer = astro.Astro(lat=config["location"]["lat"], 
-                            lon=config["location"]["lon"], elev=0)
+astro_observer = astro.Astro(lat=config.location.lat, 
+                            lon=config.location.lon, elev=0)
 
 @route('/astro/solar_day')
 def solarday():
@@ -141,6 +143,7 @@ def calendar_events(n=20):
     
 
 ## start the server
-run(host='localhost', port=config["server"]["port"],  debug=True, reloader=True, server='tornado')
+run(host='localhost', port=config.server.port,  debug=True, 
+    reloader=True, server='tornado')
 
     

@@ -9,11 +9,16 @@ function wind_arrow(g, speed, direction, bbox)
     
     raw_request('/assets/wind_arrow.svg', function(svg)
     {
-        var icon_group = g.group();     
+        var wind_group = g.group();
+        var icon_group = wind_group.group();     
         icon_group.svg(svg);               
-        fit_svg(icon_group, bbox, 1.5);   
-        icon_group.rotate(deg(rotation_angle));         
-        text_at(speed, [bbox.cx, bbox.cy], 50).id("text_style").style({"fill":"#000"});   
+        icon_group.rotate(deg(rotation_angle));  
+        
+        var rbox = icon_group.rbox(wind_group);
+
+        var text = wind_group.text(speed).id("text_style").style({"fill":"#F0F"}).move(0,0);   
+        fit_svg(wind_group, bbox, 1.5);   
+        
     });
 
 }

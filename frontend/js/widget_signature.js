@@ -12,8 +12,8 @@ widget_signature = {
     update:function(json){        
         this.text.text(function(add)
         {
-        add.tspan("JHW 2018 ").newLine();
-        add.tspan("v."+json.date+" "+json.sha).newLine();
+            add.tspan("JHW 2018 ").newLine();
+            add.tspan("v."+json.date+" "+json.sha).newLine();
         });
         fit_svg(this.text, this.bbox, 0.75);
     },
