@@ -4,6 +4,8 @@ widget_signature = {
     init:function(bbox){
         this.text = draw.text("JHW 2018");
         this.text.id("text_style");
+        this.group = draw.group();
+        this.group.add(this.text);
         this.bbox = bbox;        
     },
     

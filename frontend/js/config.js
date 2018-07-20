@@ -1,3 +1,8 @@
 config = {
-    max_event_days:30
+    event:
+    {
+        max_days:30,
+        birthday_icon:"🎁",
+        event_icon:"📅",
+    }
 }

@@ -15,7 +15,9 @@ widget_forecast = {
     init:function(bbox)
     {
         this.bbox = bbox;
-        this.text = draw.text("").id("text_style").move(bbox.x, bbox.y);                     
+        this.group = draw.group();
+        this.text = draw.text("").id("text_style").move(bbox.x, bbox.y); 
+        this.group.add(this.text);                            
     },
 
     update:function(json)

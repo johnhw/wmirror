@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="fonts/geosanslight/stylesheet.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="style.css" type="text/css" charset="utf-8" />
+<body>
+    <div id="drawing"></div>    
+  </body>
+<script type="text/javascript" src="js/extern/svg.min.js"></script>
+
+<script>
+
+
+        // The background and draw context
+        var draw = SVG('drawing').size(1080, 1920);
+        var background_rect = draw.rect(1080, 1920).attr({ fill: '#000' });
+
+        var target_rect = draw.rect(300,400).move(300,350).fill("#00f");
+
+        function show_rbox(elt)
+        {
+            var rbox = elt.rbox(draw);
+            draw.rect(rbox.w, rbox.h).move(rbox.x, rbox.y).stroke("#f0f").fill("none");
+        }
+
+        var g = draw.group();
+        var text = g.text("Hello, chaps").font({"size":40}).fill("#fff").scale(1.5, 1.5).move(0,0);
+        g.scale(1.0).x(100.0);
+        var text_box = g.rbox(draw);
+        var target_box = target_rect.rbox(draw);
+        g.transform({rotation:0}).transform({x:target_box.x-text_box.x-text_box.w/2+target_box.w/2, y:target_box.y-text_box.y-text_box.h/2+target_box.h/2}).transform({scale:0.5});
+        
+        var text_box = g.rbox(draw);
+        g.transform({rotation:0}).transform({scale:1.0, x:target_box.x-text_box.x-text_box.w/2+target_box.w/2, y:target_box.y-text_box.y-text_box.h/2+target_box.h/2}).transform({scale:0.5});
+        
+        // var text_box = g.bbox(draw);
+        // console.log(text_box);
+        
+        show_rbox(g);
+
+</script>        

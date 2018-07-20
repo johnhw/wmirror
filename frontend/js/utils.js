@@ -17,18 +17,17 @@ function sph2cart(az, el)
     return v1;
 }
 
-  
-function fit_svg(svg_group, bbox, scaling=1)
+function fit_svg(group, bbox, scaling=1)
 {
-
-    var existing_bbox = svg_group.bbox();
-    console.log(existing_bbox, bbox);
-
-    svg_group.move(bbox.x-existing_bbox.w/2+bbox.w/2, bbox.y-existing_bbox.h/2+bbox.h/2);
-    var scale_ratio = scaling*bbox.h/existing_bbox.h;    
-    svg_group.scale(scale_ratio, scale_ratio);
+    // group must not have any scaling applied!
+    //group.transform({x:0, y:0, scale:1});
+    group.untransform();
+    var text_box = group.bbox(draw);
+    var target_box = bbox;
+    var scale_ratio = scaling*bbox.h/text_box.h;
+    group.transform({rotation:0}).transform({x:target_box.x-text_box.x-text_box.w/2+target_box.w/2, 
+        y:target_box.y-text_box.y-text_box.h/2+target_box.h/2}).transform({scale:scaling*scale_ratio});  
 }
-
 
 // Fetch a URL (via GET), parse as JSON and
 // send to the given callback

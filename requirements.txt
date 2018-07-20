@@ -1,3 +1,7 @@
 bottle
 pyephem
 gitpython
+lxml
+toml
+google-api-python
+oauth2client

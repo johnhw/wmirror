@@ -23,10 +23,8 @@ widget_main_forecast_icon = {
     update:function(json)
     {
         var weather_type =json.SiteRep.DV.Location.Period[0].Rep[0].W;
-        this.group.clear();        
-        set_icon(this.bbox, icon_map.metoffice_general[weather_type].icon, this.group);
-      
-
+        this.group.select("*").remove();        
+        set_icon(this.bbox, icon_map.metoffice_general[weather_type].icon, this.group);      
     }
 
 }

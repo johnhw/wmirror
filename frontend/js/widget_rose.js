@@ -267,7 +267,7 @@ function init_rose(bbox)
         global_font = font;    
         compass_group = draw.group();        
         compass(compass_group);        
-        fit_svg(compass_group, bbox, 0.75);
+        fit_svg(compass_group, bbox, 0.8);
         // get each of the sub-components
         request("/astro/solar_day", json=>{draw_day(json)});  
         request("/astro/transits", json=>{draw_transits(json)});
