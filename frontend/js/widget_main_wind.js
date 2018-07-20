@@ -11,16 +11,17 @@ function wind_arrow(g, speed, direction, bbox)
     {
         var wind_group = g.group();
         var icon_group = wind_group.group();     
-        icon_group.svg(svg);               
+        var icon_svg = icon_group.svg(svg);               
         icon_group.rotate(deg(rotation_angle));  
-        
-        var rbox = icon_group.rbox(wind_group);
-
-        var text = wind_group.text(speed).id("text_style").style({"fill":"#F0F"}).move(0,0);   
-        fit_svg(wind_group, bbox, 1.5);   
-        
+        // find centre point of arrow
+        var ctr_point = SVG.get("wind_circle_centre");
+        var ctr_box = ctr_point.rbox(wind_group);        
+        var text = wind_group.text(speed).id("text_style").style({"fill":"#000"}).font({"size":ctr_box.w*0.65}).move(0,0);
+        var tbbox = text.bbox(); 
+        // move text onto it, centred
+        text.move(ctr_box.cx-tbbox.cx,ctr_box.cy-tbbox.cy);           
+        fit_svg(wind_group, bbox, 1.5);           
     });
-
 }
 
 widget_main_wind = {

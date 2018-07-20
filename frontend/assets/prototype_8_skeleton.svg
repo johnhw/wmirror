@@ -24,10 +24,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.70710678"
-     inkscape:cx="740.41781"
-     inkscape:cy="1071.922"
+     inkscape:cx="920.39143"
+     inkscape:cy="1184.6358"
      inkscape:document-units="px"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer3"
      showgrid="true"
      units="px"
      inkscape:pagecheckerboard="false"
@@ -670,6 +670,22 @@
        y="111.60979"
        inkscape:label="#rect30881" />
     <rect
+       style="opacity:1;fill:#ff0000;fill-opacity:0.19463088;fill-rule:nonzero;stroke:none;stroke-width:1.03124642;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.15;paint-order:normal"
+       id="tomorrow_timeseries"
+       width="76.17569"
+       height="175.57028"
+       x="210.06297"
+       y="124.72755"
+       inkscape:label="#rect30881" />
+    <rect
+       inkscape:label="#rect30881"
+       y="124.72755"
+       x="0.14948092"
+       height="175.57028"
+       width="209.757"
+       id="today_timeseries"
+       style="opacity:1;fill:#ff0000;fill-opacity:0.19463088;fill-rule:nonzero;stroke:none;stroke-width:1.71124613;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.15;paint-order:normal" />
+    <rect
        style="opacity:1;fill:#ff0000;fill-opacity:0.19463088;fill-rule:nonzero;stroke:none;stroke-width:0.54088533;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.15;paint-order:normal"
        id="time_forecast"
        width="287.3667"
@@ -791,5 +807,5 @@
            height="349.31076"
            x="562.85699"
            y="255.47063" /></flowRegion><flowPara
-         id="flowPara31028"></flowPara></flowRoot>  </g>
+         id="flowPara31028" /></flowRoot>  </g>
 </svg>

@@ -4,7 +4,7 @@ function set_icon( bbox, icon_name, group, scale=1.5)
     raw_request('/assets/climaticons/'+icon_name, function(svg)
     {
         var icon_group = group.group();
-        var svg_icon = icon_group.svg(svg).id("icon_style");        
+        var svg_icon = icon_group.svg(svg).id("icon_style");                
         var box = icon_group.bbox();        
         group.rect(100,100).fill('none');
         
