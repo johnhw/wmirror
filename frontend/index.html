@@ -20,7 +20,9 @@
 <script type="text/javascript" src="js/widgets.js"></script>
 <script type="text/javascript" src="js/line_plane.js"></script>
 
+<script type="text/javascript" src="js/widget_images.js"></script>
 <script type="text/javascript" src="js/widget_time_series.js"></script>
+<script type="text/javascript" src="js/widget_time_marker.js"></script>
 <script type="text/javascript" src="js/widget_events.js"></script>
 <script type="text/javascript" src="js/widget_location.js"></script>
 <script type="text/javascript" src="js/widget_text_forecast.js"></script>
@@ -57,6 +59,18 @@ function updateSecond()
     schedule_fetch();
 }    
 
+// return the screen bounding box for the given name
+function get_skeleton_bbox(name)
+{
+     var elt = SVG.get(name);
+     if(elt)
+     {
+        return elt.rbox(draw);
+     }
+     return null; // no such object
+}
+
+
 function init(skeleton_group)
 {
     // must be done first, so that widgets know where times are
@@ -69,11 +83,10 @@ function init(skeleton_group)
             {
                 if(widgets[widget].init) 
                 {
-                    var skeleton_widget = SVG.get(widget);
+                    var bbox = get_skeleton_bbox(widget);
                     
-                    if(skeleton_widget)
-                    {
-                        bbox = skeleton_widget.rbox(draw);                
+                    if(bbox)
+                    {                        
                         draw.rect(bbox.w, bbox.h).move(bbox.x,bbox.y).fill('none').stroke('#f0f');
                     }
                     else

@@ -9,6 +9,16 @@ data_sources = {
         url:'/metoffice/forecast',
         update:'hour',
     },
+    'solar_image' :
+    {
+        url:'/image/solar_image.jpg',
+        update:'day',
+    },
+    'aurora_image' :
+    {
+        url:'/image/aurora_prediction.jpg',
+        update:'day',
+    },
     'time' : {
         url:'/time',
         update:'minute',
@@ -83,33 +93,48 @@ for(var k in data_sources)
 // in schedule_fetch
 var schedule_latches = {}
 
-function update_datasource(data)
+function handle_data_deps(data)
 {
-    // fetch data (even if no deps)
-    request(data.url, function(json)
-        {             
-            data.json = json; // cache data                  
-            //update required, find dependent widgets
-            if(data.deps)
-            {                    
-                data.deps.forEach(function(dep)
-                {                        
-                    var update_widget = widgets[dep];                    
-                    if(update_widget)
-                    {                        
-                        // pass the JSON for this update to the widget that depends on it
-                        try
-                        {
-                            update_widget.update(data.json);
-                        }
-                        catch(err)
-                        {
-                            console.log(err);
-                        }
-                    }
-                });
+    //update required, find dependent widgets
+    if(data.deps)
+    {                    
+        data.deps.forEach(function(dep)
+        {                        
+            var update_widget = widgets[dep];                    
+            if(update_widget)
+            {                        
+                // pass the JSON for this update to the widget that depends on it
+                try
+                {
+                    update_widget.update(data.json || null);
+                }
+                catch(err)
+                {
+                    console.log(err);
+                }
             }
         });
+    }
+}
+
+function update_datasource(data)
+{
+    if(data.url)
+    {
+        // fetch data (even if no deps)
+        request(data.url, function(json)
+            {             
+                data.json = json; // cache data                  
+                handle_data_deps(data);    
+            });
+    }
+    else
+    {
+        // no URL, just call the function
+        data.json = {};
+        handle_data_deps(data);
+    }
+
 }
 
 function schedule_fetch()

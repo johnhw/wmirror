@@ -26,15 +26,22 @@ static_root = '../frontend'
 
 ## Routes
 @route('/cached_img/<filename>')
-def cached_image(filename, expiry_hours=4):
-    cached_images = config.images
-    if filename in cached_images:        
+def cached_image(filename, expiry_hours=4):    
+    if filename in config.images:        
         # download file as needed
-        local_file = cached_file(cached_images[filename], 
+        local_file = cached_file(config.images[filename]["url"], 
             expiry_hours=expiry_hours)        
         root, fname = os.path.split(local_file)              
         return static_file(fname, root=root)
 
+@route('/image/<filename>')
+def images(filename):    
+    if filename in config.images:
+        response = dict(config.images[filename])
+        response["url"] = "/cached_img/"+filename
+        return response
+    return {}
+    
 # frontend must call this regularly to prevent
 # the keepalive script from shutting down and restarting
 @route('/keepalive') 
@@ -56,7 +63,7 @@ def get_location():
 def date():    
     dt = datetime.datetime.now()
     dayname = "{dt:%A} {dt.day} {dt:%B}".format(dt=dt)
-    return {"date":dayname}
+    return {"date":dayname, "isotime":dt.isoformat()}
 
 @route('/version')
 def version():    
@@ -72,7 +79,7 @@ def curtime():
     dt = datetime.datetime.now()    
     current_time = "{dt:%H}:{dt:%M}".format(dt=dt)
     tz = time.strftime('%Z%z')
-    return {"time":current_time, "timezone":tz}    
+    return {"time":current_time, "timezone":tz, "isotime":dt.isoformat()}    
 
 ## forecasts 
 @route('/metoffice/closest_station')

@@ -20,5 +20,5 @@ region_id = "500"
 # key:value pairs, indicating a "local name" for a file, 
 # and the corresponding URL it should be fetched from
 # this will be cached automatically, and expired as on a regular basis (e.g. every 4 hours)
-"solar_image.jpg" = "https://sdo.gsfc.nasa.gov/assets/img/latest/f_211_193_171pfss_1024.jpg"
-"aurora_prediction.jpg" ="http://services.swpc.noaa.gov/images/animations/ovation-north/latest.jpg"
+"solar_image.jpg" = {url="https://sdo.gsfc.nasa.gov/assets/img/latest/f_211_193_171pfss_1024.jpg", width=1024, height=1024}
+"aurora_prediction.jpg" = {url="http://services.swpc.noaa.gov/images/animations/ovation-north/latest.jpg", width=800, height=800}
