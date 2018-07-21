@@ -10,6 +10,7 @@ server/alive.txt
 
 designs/
 secrets/
+research/
 
 # Distribution / packaging
 .Python

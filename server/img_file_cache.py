@@ -3,7 +3,7 @@ import shutil
 import tempfile
 import os
 import time
-
+from PIL import Image
 
 tempdir = tempfile.gettempdir()
 
@@ -13,16 +13,36 @@ def download_file(path, url):
     with open(path, 'wb') as f:
         shutil.copyfileobj(r.raw, f)
 
+def download_file_resize(path, cfg):    
+    # download the image, resize to the given size
+    # (w/hq filter) and save again
+    url, width, height = cfg["url"], cfg["width"], cfg["height"]
+    crop = cfg.get("crop")    
+    r = requests.get(url, stream=True)
+    img = Image.open(r.raw)
+    # crop if required
+    if crop:
+        img = img.crop(crop)
+    if cfg.get("rotate"):
+        img = img.rotate(cfg["rotate"])
+    # rescale to target size following any crop
+    img = img.resize((width, height), resample=Image.LANCZOS)
+    img.save(path)
 
-def cached_file(url, expiry_hours):
-    # allow for callbacks which return urls, as well as direct
+
+def cached_file(cfg, expiry_hours):
+    print(tempdir)
+    # takes a dict "cfg" which must have "url" entry specifying the actual URL
+    # to download
+    # allow for callbacks which return dicts, as well as direct
     # string urls
-    if callable(url):
-        url = url()
+    if callable(cfg):
+        cfg = cfg()
 
+    url = cfg["url"]
     fname = url.split('/')[-1]
     temp_fname = os.path.join(tempdir, fname)
-    stale = False
+    stale = True
     
     # check if there is a cached version, and how old it is on disk
     if os.path.exists(temp_fname):
@@ -34,6 +54,9 @@ def cached_file(url, expiry_hours):
         stale = True
     
     if stale:    
-        download_file(temp_fname, url)    
+        if cfg.get("resize", False):            
+            download_file_resize(temp_fname, cfg)    
+        else:
+            download_file(temp_fname, url)    
     return temp_fname
         

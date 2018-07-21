@@ -2,6 +2,7 @@ import os
 import datetime
 import time
 from pathlib import Path
+import json
 
 from bottle import route, run, static_file
 import toml
@@ -13,8 +14,8 @@ import metoffice
 import gcalendar
 import astro
 from img_file_cache import cached_file
-
-
+import tides
+import numpy as np
 
 ## Configuration and constants
 # read the config
@@ -26,13 +27,17 @@ static_root = '../frontend'
 
 ## Routes
 @route('/cached_img/<filename>')
-def cached_image(filename, expiry_hours=4):    
+def cached_image(filename):    
     if filename in config.images:        
         # download file as needed
-        local_file = cached_file(config.images[filename]["url"], 
-            expiry_hours=expiry_hours)        
+        local_file = cached_file(config.images[filename], 
+            expiry_hours=config.images[filename].get("expiry_hours",4))        
         root, fname = os.path.split(local_file)              
         return static_file(fname, root=root)
+
+
+## Routes
+
 
 @route('/image/<filename>')
 def images(filename):    
@@ -137,6 +142,18 @@ def transits():
 @route('/astro/analemma')
 def analemma():
     return astro_observer.solar_analemma()          
+
+# tidal predictions
+@route('/tides/<day>')
+def tide(day):    
+    today = np.datetime64(datetime.datetime.now().date()) + np.timedelta64(int(day), 'D')
+    # predict every minute
+    hours = np.arange(0,24*60) * np.timedelta64(1, 'm') + today
+    # load constants fron file
+    with open(config.tides.constituents_file) as f:
+        constituents = json.load(f)
+    heights = tides.tide_predict(hours, constituents, config.tides.get("local_time_offset", "00:00:00"))
+    return {"times":[h.item().isoformat() for h in hours], "heights":list(heights)}
 
 ## send static files
 @route('/<filename:path>')

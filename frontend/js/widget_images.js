@@ -1,6 +1,8 @@
 
-
-
+// Construct a new image widget, that just fits an
+// image in the box. Image dimensions are reported by
+// the server, along with the URL for the (cached version) of
+// the image
 function image_widget()
 {
     var widget =  {
@@ -9,8 +11,7 @@ function image_widget()
             this.bbox = bbox; 
         },  
 
-        update:function(json){        
-            console.log(json);
+        update:function(json){                    
             this.group.clear();                        
             this.group.image(json.url, json.width, json.height);            
             fit_svg(this.group, this.bbox);        

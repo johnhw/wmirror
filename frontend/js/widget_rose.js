@@ -196,6 +196,7 @@ function draw_locations(json)
     
     compass_group.add(sun_symbol);        
     compass_group.add(moon_symbol);                
+    compass_group.add(draw_gnomon(json.sun));
 }
 
 function draw_analemma(json)
@@ -218,11 +219,14 @@ function draw_symbol(obj, sym, font_size)
     {
      color = '#44d';   
     }
-    var back = draw.circle(font_size*0.9).fill("#000").move(vpos[0]-font_size*0.4, vpos[1]-font_size*0.3);//.fill({"fill-opacity":0.5});
+    var back = draw.circle(font_size).fill("#000").move(vpos[0]-font_size*0.5, vpos[1]-font_size*0.5);//.fill({"fill-opacity":0.5});
 
     text = perspective_text(v1, sym, font_size).id("text_style").style({"fill":color});
     
-    hline = perspective_polyline([[0,0,0], v1, [v1[0], 0, v1[2]]]).stroke({"color":"#fff", "width":0.005, "dasharray":0.03}).fill('#fff').attr({'fill-opacity':0.2})
+    // semi-transparent triangle to plane, same color as symbol (white above horizon, blue below)
+    var compass_v = vec3.create();
+    vec3.normalize(compass_v, [v1[0], 0, v1[2]]); // position on compass plane at same angle
+    hline = perspective_polyline([[0,0,0], v1, compass_v]).stroke({"color":"#fff", "width":0.005, "dasharray":0.03}).fill(color).attr({'fill-opacity':0.2})
  
     
     group.add(hline);      
@@ -234,7 +238,6 @@ function draw_symbol(obj, sym, font_size)
 
 function draw_day(json)
 {
-    console.log(json);
     
     function label_day_point(point, horizontal_offset, vertical_offset)
     {
@@ -258,22 +261,123 @@ function draw_day(json)
                   
 }
 
+// project a ray from a source point through each point
+// of the polygon onto the given plane. Return the
+// correspodning polygon projected onto this plane.
+function project_onto(ray_start, polygon, plane)
+{
+    var projected = [];    
+    polygon.forEach(function(v)
+    {
+        var v_proj = findLinePlaneIntersectionCoords(ray_start[0], ray_start[1], ray_start[2], v[0], v[1], v[2], plane[0], plane[1], plane[2], plane[3]);
+        projected.push([v_proj.x, v_proj.y, v_proj.z]);
+    });
+    return projected;
+}
+
+function scale_list(list_v3, scale)
+{
+    var scaled = [];
+    list_v3.forEach(function(v)
+    {
+        scaled.push([v[0]*scale, v[1]*scale, v[2]*scale]);
+    });
+    console.log(scaled);
+    return scaled;
+
+}
+
+function draw_gnomon(sun)
+{
+    var g = draw.group();
+    // we draw a very small gnomon
+    // so that the height of the gnomon is negligible
+    // compared to the sun; then project and rescale afterwards
+    var gnomon_w = 0.0001;
+    var gnomon_h = 0.001;
+    var w = gnomon_w;
+    var h = gnomon_h;
+
+    // separates layers of the gnomon
+    var gnomon_marker = draw.rect(0,0);
+
+    function gnomon_slice(angle)
+    {
+        // draw a shadow, but only if the sun is high enough
+        // that we can project sensibly
+        var sun_pos = sph2cart(sun.az, sun.alt);                
+        var gnomon_poly = [[-w,0,0], [-w,-h,0], [0,-h*1.25,0], [w,-h,0], [w,0,0]];
+        var rotated_poly = [];
+        // rotate about axis as needed
+        gnomon_poly.forEach(function(v) { v3 = vec3.create(); vec3.rotateY(v3,v,[0,0,0],angle); rotated_poly.push(v3); });
+        gnomon_poly = rotated_poly;
+        var gnomon = perspective_polygon(scale_list(gnomon_poly,500)).fill({"color":"#fff"});
+        gnomon.before(gnomon_marker);
+        
+        if(-sun_pos[1]>gnomon_h)
+        {
+            var shadow_poly = project_onto(sun_pos, gnomon_poly, [0,1,0,0]);    
+            var gnomon_shadow = perspective_polygon(scale_list(shadow_poly,500)).fill({"color":"#000"});   
+            gnomon_shadow.after(gnomon_marker);
+            g.add(gnomon_shadow);
+        }    
+
+        g.add(gnomon);
+    }
+    
+    gnomon_slice(0);
+    gnomon_slice(90);
+    gnomon_slice(45);
+            
+    return g;    
+}
+
+
+// Create dummy objects which will be used as 
+// placeholders to arrange the z-order of objects
+// Other objects are placed relative to these, using
+// before() and after()
+var layer_separators = [
+    "base", 
+    "transits",
+    "locations",
+    "analemma",
+    "day"]
+
+var rose_layers = {};
+function make_layer_separators()
+{
+    var previous = null;
+    layer_separators.forEach(function(name){
+        elt = compass_group.rect(0,0);
+        if(previous) { elt.after(previous); }
+        previous = elt;
+        rose_layers[name] = elt;
+    });
+}
+
 function init_rose(bbox)
 {
+    
+
     opentype.load(font_file, function(err, font) {
         if (err) {
             alert('Could not load font: ' + err);
         } else {
         global_font = font;    
         compass_group = draw.group();        
+        make_layer_separators();
+        console.log(rose_layers);
         compass(compass_group);        
         fit_svg(compass_group, bbox, 0.8);
+        
         // get each of the sub-components
         request("/astro/solar_day", json=>{draw_day(json)});  
         request("/astro/transits", json=>{draw_transits(json)});
         // hmm: these need to be updated a different rate...
-        request("/astro/analemma", json=>{draw_analemma(json)});
+        
         request("/astro/locations", json=>{draw_locations(json)}); 
+        request("/astro/analemma", json=>{draw_analemma(json)});
         }
     });
 }

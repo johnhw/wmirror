@@ -14,7 +14,7 @@ widget_moon_icon = {
         this.group.circle(20.0).fill("#000").stroke("#fff");
         fit_svg(this.group, this.bbox, 0.9);
         // text label, outside of bbox
-        this.text = this.group.text("").id("text_style").move(0,26).font({"font-size":3});
+        this.text = this.group.text("").id("text_style").move(0,22).font({"font-size":4});
         this.arc = null;
     },
 

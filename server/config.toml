@@ -17,8 +17,13 @@ region = "os"
 region_id = "500"
 
 [images]
-# key:value pairs, indicating a "local name" for a file, 
+# key=value pairs, indicating a "local name" for a file, 
 # and the corresponding URL it should be fetched from
 # this will be cached automatically, and expired as on a regular basis (e.g. every 4 hours)
-"solar_image.jpg" = {url="https://sdo.gsfc.nasa.gov/assets/img/latest/f_211_193_171pfss_1024.jpg", width=1024, height=1024}
-"aurora_prediction.jpg" = {url="http://services.swpc.noaa.gov/images/animations/ovation-north/latest.jpg", width=800, height=800}
+"solar_image.jpg" = {url="https://sdo.gsfc.nasa.gov/assets/img/latest/f_211_193_171pfss_1024.jpg", width=256, height=256, resize=true, crop=[50,50,930,930]}
+"aurora_prediction.jpg" = {url="http://services.swpc.noaa.gov/images/animations/ovation-north/latest.jpg", width=200, height=200, resize=true, rotate=-90, crop=[120,120,670,670]}
+
+[tides]
+# offset to the local conditions from the port predicted
+local_time_offset = "-01:50:00" 
+constituents_file = "tide_constituents.json"
