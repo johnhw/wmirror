@@ -1,3 +1,8 @@
+var MS_PER_SECOND = 1000;
+var MS_PER_MINUTE = 60 * MS_PER_SECOND;
+var MS_PER_HOUR = 60 * MS_PER_MINUTE;
+var MS_PER_DAY = MS_PER_HOUR * 24;
+
 class TimeSeries 
 {
     constructor(label, min, max, units, bbox, margin=0.7)
@@ -55,8 +60,7 @@ class TimeSeries
             var y = this.y(ys[i]);
             path.push(x);
             path.push(y);
-        }
-        console.log(path);    
+        }        
         this.path = draw.polyline(path).stroke({color:"#fff", width:2}).fill({color:"#000", opacity:0.2});
     }
 

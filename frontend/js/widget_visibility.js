@@ -17,6 +17,7 @@ function sigmoid(x)
     return 1.0 / (1+Math.exp(x));
 }
 
+// mapping from metoffice codes to visibility distances, in km
 visibility_distances = 
 {
     'FG':0.4,
@@ -30,6 +31,7 @@ visibility_distances =
     'EX':200,
 }
 
+// Human readable names for the visibility codes
 visibility_names = 
 {
     'FG':"Fog",
@@ -71,6 +73,7 @@ widget_visibility = {
         this.group = group;
     },
 
+    // update the visibility of each landmass region
     update:function(json)
     {        
         var vis = get_visibility(general_forecast(json));
@@ -78,8 +81,8 @@ widget_visibility = {
         for(var k in distances)
         {
             var d = parseFloat(k);     
-            var obscured = sigmoid((d-vis_distance/2)/(vis_distance/2));            
-            console.log(general_forecast(json).V, vis_distance, d, obscured);
+            // compute visibility of the region at this distance and set opacity accordingly
+            var obscured = sigmoid((d-vis_distance/2)/(vis_distance/2));                        
             distances[k].fill({opacity:obscured});
         }
 
