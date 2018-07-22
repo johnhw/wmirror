@@ -10,23 +10,29 @@ function bold_dictionary(add, json, key_font_props, value_font_props)
     }
 }
 
+
+
+
+
 widget_forecast = {
 
     init:function(bbox)
     {
         this.bbox = bbox;
         this.group = draw.group();
-        this.text = draw.text("").id("text_style").move(bbox.x, bbox.y); 
-        this.group.add(this.text);                            
+        this.wrap_text = wrap_to_box("", bbox);
+        this.wrap_text.div.id = "text_style";
+        this.group.add(this.wrap_text.container);                            
     },
 
     update:function(json)
     {        
-        this.text.text(function(add)
+        
+        this.wrap_text.div.innerHTML = "<p>"+json.general+"</p>";
+        for(var k in json.today)
         {
-            add.tspan(json.general).newLine();            
-            bold_dictionary(add, json.today, {"fill":"#fff"}, {"fill":"#888"});    
-        });
+            this.wrap_text.div.innerHTML += "<p> <b>"+k+"</b> &nbsp "+json.today[k]+" </p>";
+        }        
     }    
 
 }

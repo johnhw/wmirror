@@ -1,16 +1,28 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<link rel="stylesheet" href="fonts/geosanslight/stylesheet.css" type="text/css" charset="utf-8" />
 <link rel="stylesheet" href="style.css" type="text/css" charset="utf-8" />
+
+<!-- the main canvas; the only HTML element! -->
 <body>
     <div id="drawing"></div>    
-  </body>
+</body>
+
+<!-- external packages -->
 <script type="text/javascript" src="js/extern/svg.min.js"></script>
 <script type="text/javascript" src="js/extern/gl-matrix-min.js"></script>
 <script type="text/javascript" src="js/extern/opentype.min.js"></script>
+<script type="text/javascript" src="js/extern/svg.foreignobject.js"></script>
 
-<!-- widgets -->
+<!-- fonts -->
+<link rel="stylesheet" href="fonts/geosanslight/stylesheet.css" type="text/css" charset="utf-8" />
 
+
+<!-- fontawesome -->
+<link href="/fonts/fontawesome/css/all.css" rel="stylesheet"> 
+<script defer src="/fonts/fontawesome//js/all.js"></script> 
+
+
+<!-- local imports -->
 <script type="text/javascript" src="js/utils/labels.js"></script>
 <script type="text/javascript" src="js/utils/perspective.js"></script>
 <script type="text/javascript" src="js/config.js"></script>
@@ -20,6 +32,9 @@
 <script type="text/javascript" src="js/widgets.js"></script>
 <script type="text/javascript" src="js/line_plane.js"></script>
 
+<!-- widgets -->
+<script type="text/javascript" src="js/widget_wifi.js"></script>
+<script type="text/javascript" src="js/widget_storm_force.js"></script>
 <script type="text/javascript" src="js/widget_images.js"></script>
 <script type="text/javascript" src="js/widget_time_series.js"></script>
 <script type="text/javascript" src="js/widget_time_marker.js"></script>
@@ -35,15 +50,14 @@
 <script type="text/javascript" src="js/widget_main_wind.js"></script>
 <script type="text/javascript" src="js/widget_signature.js"></script>
 
+Visiblity and UV index widgets
 Change the forecast to use the correct index (not index 0), but the latest index closest to midday
-Add gnomon shadow
 Add maps intergration
-Add in images
 Add timeseries
 Add mini-forecast widget
 Styling should be factored out in palettes, sizes, etc.
 Update w/o flicker
-Add storm force to design
+Arrange items on rose with correct z-order
 
 <script>
 

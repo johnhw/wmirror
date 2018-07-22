@@ -11,7 +11,7 @@ widget_main_temperature = {
 
     update:function(json)
     {
-        this.text.text(json.SiteRep.DV.Location.Period[0].Rep[0].T+"°");
+        this.text.text(general_forecast(json).T+"°");
         fit_svg(this.group, this.bbox, 1.2);
     }
 

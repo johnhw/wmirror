@@ -21,7 +21,7 @@ function cardinal(label, rad, angle, sz)
     path = svg_path(font_path, function(p){
         vec2.rotate(rotated, p, [w/2,-h/2], angle);
         return ftransform([(rotated[0]-w/2)*-scale+x, 0, (rotated[1]+h/2)*scale+y]);});    
-    path = draw.path(path).fill('#fff').attr({'fill-opacity':0.2});  
+    path = draw.path(path).fill('#fff').attr({'fill-opacity':0.8});  
     return path;    
 }
 
@@ -167,8 +167,6 @@ function draw_transits(json)
     sun_path = json.sun;
     moon_path = json.moon;
 
-    // draw the rose and various guides
-    console.log(sun_path);
     
     var day_moon_polyline = draw_spherical_path(moon_path, 1);        
     var day_sun_polyline = draw_spherical_path(sun_path, 1);
@@ -180,11 +178,8 @@ function draw_transits(json)
     compass_group.add(night_sun_polyline.stroke({"color":"#337", "width":0.01}).fill({"color":"none"}));
 
     compass_group.add(day_moon_polyline.stroke({"color":"#ff8", "width":0.01, "dasharray":0.03}).fill({"color":"none"}));
-    compass_group.add(night_moon_polyline.stroke({"color":"#117", "width":0.01, "dasharray":0.03}).fill({"color":"none"}));                        
-
-    
+    compass_group.add(night_moon_polyline.stroke({"color":"#117", "width":0.01, "dasharray":0.03}).fill({"color":"none"}));                           
 }
-
 
 // current location of sun/moon
 function draw_locations(json)
@@ -305,7 +300,8 @@ function draw_gnomon(sun)
     {
         // draw a shadow, but only if the sun is high enough
         // that we can project sensibly
-        var sun_pos = sph2cart(sun.az, sun.alt);                
+        var sun_pos = sph2cart(sun.az, sun.alt);    
+        if(sun.az<0) return; // sun is below horizon; skip gnomon
         var gnomon_poly = [[-w,0,0], [-w,-h,0], [0,-h*1.25,0], [w,-h,0], [w,0,0]];
         var rotated_poly = [];
         // rotate about axis as needed
@@ -367,7 +363,7 @@ function init_rose(bbox)
         global_font = font;    
         compass_group = draw.group();        
         make_layer_separators();
-        console.log(rose_layers);
+        
         compass(compass_group);        
         fit_svg(compass_group, bbox, 0.8);
         

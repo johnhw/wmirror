@@ -29,6 +29,26 @@ function fit_svg(group, bbox, scaling=1)
         y:target_box.y-text_box.y-text_box.h/2+target_box.h/2}).transform({scale:scaling*scale_ratio});  
 }
 
+
+// Wrap HTML in a bounding box, using the foreign element
+// functionality
+function wrap_to_box(html_text, bbox)
+{
+    var fobj = draw.foreignObject(bbox.w,bbox.h);
+    // add a div to hold the text to be wrapped
+    fobj.appendChild("div", {id: 'text_style', style:"color:#fff", innerHTML:html_text});             
+    fobj.move(bbox.x, bbox.y);
+    return {"container":fobj, "div":fobj.getChild(0)};
+}
+
+// Given a MetOffice json forecast, return
+// the general weather for today (the
+// observation closest to midday)
+function general_forecast(json)
+{
+    return json.SiteRep.DV.Location.Period[0].Rep[0];  
+}
+
 // Fetch a URL (via GET), parse as JSON and
 // send to the given callback
 function request(url, callback)

@@ -1,15 +1,18 @@
+# stdlib
 import os
 import datetime
 import time
 from pathlib import Path
 import json
 
+# installed
 from bottle import route, run, static_file
 import toml
 import pytz
 import git
 import munch
 
+# local
 import metoffice
 import gcalendar
 import astro
@@ -36,9 +39,9 @@ def cached_image(filename):
         return static_file(fname, root=root)
 
 
+
+
 ## Routes
-
-
 @route('/image/<filename>')
 def images(filename):    
     if filename in config.images:
@@ -46,7 +49,13 @@ def images(filename):
         response["url"] = "/cached_img/"+filename
         return response
     return {}
-    
+
+# return whether network is working, and what the SSID is
+@route('/wifi')
+def wifi():
+    response = {"ssid":"Test WIFI", "connected":False}
+    return response
+
 # frontend must call this regularly to prevent
 # the keepalive script from shutting down and restarting
 @route('/keepalive') 
@@ -89,20 +98,21 @@ def curtime():
 ## forecasts 
 @route('/metoffice/closest_station')
 def closest_station():
-    # need to parse the latlon to unencode from URL string
+    # returns the numeric id of the metoffice station closest
+    # to the current location. This may not have useful forecasts, however!
     return metoffice.nearest_station(lon=astro_observer.lon, 
     lat=astro_observer.lat)
 
 @route('/metoffice/forecast')
 def full_forecast():
-    # dummy static forecast for now
-    #with open("test_forecast.json") as f:
-    #    return f.read()
+    # return the metoffice forecast for the current station
+    # in its native foremat
     return metoffice.forecast(config.metoffice.station_id)
 
 
 @route('/metoffice/text_forecast')
 def text_forecast():
+    # return the metoffice text regional forecast for the current region    
     return metoffice.forecast(config.metoffice.region_id)
 
 @route('/metoffice/inshore_forecast')
@@ -112,7 +122,6 @@ def inshore_forecast():
 
 @route('/metoffice/shipping_forecast')
 def shipping_forecast():    
-    #return {}
     forecast = metoffice.shipping_forecast()
     return {"synopsis":forecast["synopsis"],
      "local_area":forecast["areas"][config.metoffice.shipping_area]}

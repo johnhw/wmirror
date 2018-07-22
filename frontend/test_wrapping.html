@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="fonts/geosanslight/stylesheet.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="style.css" type="text/css" charset="utf-8" />
+<body>
+    <div id="drawing"></div>    
+  </body>
+<script type="text/javascript" src="js/extern/svg.min.js"></script>
+<script type="text/javascript" src="js/extern/svg.foreignobject.js"></script>
+
+<script>
+
+
+        // The background and draw context
+        var draw = SVG('drawing').size(1080, 1920);
+        var background_rect = draw.rect(1080, 1920).attr({ fill: '#000' });
+        console.log(draw);
+        var target_rect = draw.rect(300,400).move(300,350).fill("#00f");
+
+        var test_text = "Lorem ipsum dolor sit amet, <b>consectetur adipiscing</b> elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+
+        function wrap_to_box(text, bbox)
+        {
+            var fobj = draw.foreignObject(bbox.w,bbox.h);
+            // add a div to hold the text to be wrapped
+            fobj.appendChild("div", {id: 'text_style', style:"color:#fff", innerHTML:text});
+            var div = fobj.getChild(0);
+            
+            fobj.move(bbox.x, bbox.y);
+            return fobj;
+        }
+        
+        wrap_to_box(test_text, target_rect.bbox());
+     
+
+</script>        

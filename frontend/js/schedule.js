@@ -9,11 +9,16 @@ data_sources = {
         url:'/metoffice/forecast',
         update:'hour',
     },
+    'wifi' :
+    {
+        url:'/wifi',
+        update:'second',
+    },
     'solar_image' :
     {
         url:'/image/solar_image.jpg',
         update:'day',
-    },
+    },    
     'aurora_image' :
     {
         url:'/image/aurora_prediction.jpg',

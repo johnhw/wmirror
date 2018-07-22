@@ -24,6 +24,14 @@ function wind_arrow(g, speed, direction, bbox)
     });
 }
 
+// Given a MetOffice json forecast, return
+// the general weather for today (the
+// observation closest to midday)
+function general_forecast(json)
+{
+    return json.SiteRep.DV.Location.Period[0].Rep[0];  
+}
+
 widget_main_wind = {
     init:function(bbox)
     {        
@@ -33,11 +41,11 @@ widget_main_wind = {
 
    
     update:function(json)
-    {
-        console.log(json);
-        var direction = json.SiteRep.DV.Location.Period[0].Rep[0].D;
-        var speed = json.SiteRep.DV.Location.Period[0].Rep[0].S;
-        var gust = json.SiteRep.DV.Location.Period[0].Rep[0].G;        
+    {        
+        general = general_forecast(json);
+        var direction = general.D;
+        var speed = general.S;
+        var gust =  general.G;     
         this.group.clear();     
 
 
