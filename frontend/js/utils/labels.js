@@ -67,7 +67,7 @@ function text_at(text, pos, w)
   return text;
 }
 
-function label(text, pos, to,  font, direction="top", text_style={"fill":"#fff"}, spur_len=25, space_len=10)
+function add_spaced_label(text, pos, to,  font, direction="top", text_style={"fill":"#fff"}, spur_len=25, space_len=10)
 {
   var group = draw.group();
   

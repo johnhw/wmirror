@@ -4,6 +4,7 @@ widget_wifi = {
         this.bbox = bbox;        
         this.text = wrap_to_box("", this.bbox);
         this.text.container.id("text_style");
+        this.text.container.style("font-size:40px");
         this.group = draw.group();
         this.group.add(this.text.container);
         
@@ -16,8 +17,8 @@ widget_wifi = {
         else
             icon = "ban";
         
-        this.text.div.innerHTML='<i class="fas fa-'+icon+'" style="font-size:'+this.bbox.h+'px"></i> '+json.ssid;        
-        //fit_svg(this.group, this.bbox);
+        this.text.div.innerHTML='<i class="fas fa-'+icon+'"></i> '+json.ssid;        
+        fit_svg(this.group, this.bbox);
     },
 }
 

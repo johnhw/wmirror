@@ -214,7 +214,7 @@ function draw_symbol(obj, sym, font_size)
     {
      color = '#44d';   
     }
-    var back = draw.circle(font_size).fill("#000").move(vpos[0]-font_size*0.5, vpos[1]-font_size*0.5);//.fill({"fill-opacity":0.5});
+    var back = draw.circle(font_size).fill("#000").move(vpos[0]-font_size*0.5, vpos[1]-font_size*0.5).fill({"opacity":0.65});
 
     text = perspective_text(v1, sym, font_size).id("text_style").style({"fill":color});
     
@@ -245,7 +245,7 @@ function draw_day(json)
         var rbox = marker.rbox(draw);
         
         var l = pad(date.getHours(),2) + "" + pad(date.getMinutes(),2);
-        label_group = label(l, [rbox.cx+75*horizontal_offset, rbox.cy+75*vertical_offset], [rbox.cx, rbox.cy], 25, direction='closest');
+        label_group = add_spaced_label(l, [rbox.cx+75*horizontal_offset, rbox.cy+75*vertical_offset], [rbox.cx, rbox.cy], 25, direction='closest');
         label_group.text.id("text_style");
         
     }
@@ -324,6 +324,13 @@ function draw_gnomon(sun)
     gnomon_slice(0);
     gnomon_slice(90);
     gnomon_slice(45);
+
+    if(sun.az>0)
+    {
+        var rad = gnomon_w*1000.0;
+        var pos = ftransform([0,0,0]);
+        var c = g.circle(rad).fill("#fff").move(-rad*0.5+pos[0], -rad*0.75+pos[1]);    
+    }
             
     return g;    
 }

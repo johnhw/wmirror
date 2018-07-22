@@ -76,3 +76,14 @@ function raw_request(url, callback)
     request.open('GET', url);
     request.send();
 }
+
+// Return the datetimes for 00:00 today and tomorrow
+function today_tomorrow()
+{
+    var date = new Date(Date.now());
+    // compute the date objects for 00:00 today and tomorrow
+    var today_date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    var tomorrow = new Date(today_date.valueOf());
+    tomorrow.setDate(tomorrow.getDate()+1);                
+    return {today:today_date, tomorrow:tomorrow}
+}

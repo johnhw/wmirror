@@ -23,7 +23,7 @@ function formatLocation(json)
         { 
             ns = 'N';
         }
-        return lat[0] + "°" + lat[1]+" ′" + lat[2] + '″' + ns + "  " + lon[0] + "°" + lon[1]+"′" + lon[2] + '″' + ew;        
+        return lat[0] + "°" + lat[1]+"′" + lat[2] + '″' + ns + "  " + lon[0] + "°" + lon[1]+"′" + lon[2] + '″' + ew;        
     }
 
 
@@ -38,7 +38,7 @@ widget_location =
 
     update:function(json){        
         this.text.text(formatLocation(json));
-        fit_svg(this.group, this.bbox, 0.8);
+        fit_svg(this.group, this.bbox, 0.75);
         
     }
     
