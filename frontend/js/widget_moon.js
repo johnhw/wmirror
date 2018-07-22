@@ -14,7 +14,8 @@ widget_moon_icon = {
         this.group.circle(20.0).fill("#000").stroke("#fff");
         fit_svg(this.group, this.bbox, 0.9);
         // text label, outside of bbox
-        this.text = this.group.text("").id("text_style").move(0,22).font({"font-size":4});
+        this.label_bbox = get_skeleton_bbox("main_moon_state");
+        this.text = draw.text("").id("text_style").font({"font-size":14});
         this.arc = null;
     },
 
@@ -53,8 +54,9 @@ widget_moon_icon = {
         if(phase_stage<0) phase_stage = 8;        
         var name = moon_phase_names[phase_stage % 8];
 
-        // label with the phase, just outside of the icon box
+        // label with the phase, just outside of the icon box        
         this.text.text(name);
+        fit_svg(this.text, this.label_bbox, 0.75);
     }
 
 }

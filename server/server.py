@@ -153,11 +153,11 @@ def analemma():
     return astro_observer.solar_analemma()          
 
 # tidal predictions
-@route('/tides/<day>')
-def tide(day):    
+@route('/tides')
+def tide(day=0):    
     today = np.datetime64(datetime.datetime.now().date()) + np.timedelta64(int(day), 'D')
-    # predict every minute
-    hours = np.arange(0,24*60) * np.timedelta64(1, 'm') + today
+    # predict every minute for 48 hours
+    hours = np.arange(0,48*60) * np.timedelta64(1, 'm') + today
     # load constants fron file
     with open(config.tides.constituents_file) as f:
         constituents = json.load(f)

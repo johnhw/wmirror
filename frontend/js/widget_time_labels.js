@@ -40,11 +40,9 @@ function day_labels(date, bbox)
     var g = draw.group();
     [0,3,6,9,12,15,18,21,24,30,36,42].forEach(function(hour_offset)
     {
-        var hour_date = new Date(date.getTime() + hour_offset * MS_PER_HOUR);
-        
+        var hour_date = new Date(date.getTime() + hour_offset * MS_PER_HOUR);        
         var xpos = time_xpos(hour_date); // centre point of label
-        var ypos = bbox.cy;
-        
+        var ypos = bbox.cy;        
         var text_label = draw.text(pad(hour_offset % 24,2)+"00").id("text_style");
         var font_size;
         // Set labels so that intermediate hours (e.g. 0300) appear smaller

@@ -14,6 +14,11 @@ data_sources = {
         url:'/wifi',
         update:'second',
     },
+    'tides':
+    {
+        url:'/tides',
+        update:'day',
+    },
     'solar_image' :
     {
         url:'/image/solar_image.jpg',

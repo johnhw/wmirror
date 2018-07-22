@@ -1,19 +1,5 @@
-
-// add should be the result of calling draw.text(fn(add)...
-// properties for keys and values are given in the props
-function bold_dictionary(add, json, key_font_props, value_font_props)
-{                
-    for (var k in json) {
-        var value = json[k];
-        add.tspan(k).id("text_style").style(key_font_props).newLine();                
-        add.tspan("\t"+value).id("text_style").style(value_font_props);                
-    }
-}
-
-
-
-
-
+// Simple text forecast block, using formatted HTML
+// in an SVG foreign object block
 widget_forecast = {
 
     init:function(bbox)
@@ -26,12 +12,11 @@ widget_forecast = {
     },
 
     update:function(json)
-    {        
-        
+    {                
         this.wrap_text.div.innerHTML = "<p>"+json.general+"</p>";
         for(var k in json.today)
         {
-            this.wrap_text.div.innerHTML += "<p> <b>"+k+"</b> &nbsp "+json.today[k]+" </p>";
+            this.wrap_text.div.innerHTML += "<p> <b>"+k+"</b> "+json.today[k]+" </p>";
         }        
     }    
 
