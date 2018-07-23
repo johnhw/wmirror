@@ -14,8 +14,7 @@ widget_time_marker = {
         {
             var hour_date = new Date(days.today.getTime() + hour_offset * MS_PER_HOUR);        
             var xpos = time_xpos(hour_date); 
-            var opacity;
-            
+            var opacity;            
             if(((hour_offset/3)%2)===1)
             {
                 opacity = 0.05;
@@ -36,13 +35,12 @@ widget_time_marker = {
 
     update:function(json){                
         this.group.clear();
-
         var now = Date.now();
-        var x = time_xpos(now);
-        console.log(x, this.bbox);        
+        var x = time_xpos(now);        
         this.group.line(x, this.bbox.y, x, this.bbox.y2).stroke({"color":"#fff", "width":2});             
         // line to the time widget        
         this.group.line(x, this.bbox.y, this.time_bbox.cx, this.time_bbox.y2).stroke({"color":"#fff", "width":2});             
+        this.group.line(this.time_bbox.cx, this.time_bbox.y2, this.time_bbox.cx, this.time_bbox.y2-10).stroke({"color":"#fff", "width":2});             
         this.group.rect(20, this.bbox.h).move(-10+x, this.bbox.y).fill({"color":"#fff", "opacity":0.1});     
         
     },  

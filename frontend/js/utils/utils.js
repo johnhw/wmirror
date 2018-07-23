@@ -43,7 +43,8 @@ function wrap_to_box(html_text, bbox)
 
 // Given a MetOffice json forecast, return
 // the general weather for today (the
-// observation closest to midday)
+// observation closest to midday) for the given day
+// 0=today, 1=tomorrow, etc.
 function general_forecast(json, day=0)
 {
     return json.SiteRep.DV.Location.Period[day].Rep[0];  

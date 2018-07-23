@@ -6,8 +6,7 @@ import traceback
 
 server_url = "http://localhost:8080"
 
-json_endpoints = [
-    
+json_endpoints = [    
     '/keepalive',
     '/location',
     '/date',
@@ -24,19 +23,20 @@ json_endpoints = [
     '/astro/transits',
     '/astro/analemma',
     '/events',
-    '/tides/0',
-    '/tides/1',
-    '/tides/2',
-    '/version'
+    '/tides',    
+    '/version',
+    '/wifi',
     '/image/solar_image.jpg',
     '/image/aurora_prediction.jpg',
 ]
 
-img_endpoints = ['/cached_img/solar_image.jpg',
+img_endpoints = [
+    '/cached_img/solar_image.jpg',
     '/cached_img/aurora_prediction.jpg',    
 ]
 
-static_endpoints = ['/index.html',
+static_endpoints = [
+    '/index.html',
     '/js/widgets.js',
     '/js/utils/perspective.js',
     '/js/extern/gl-matrix-min.js',

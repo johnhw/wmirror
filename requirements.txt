@@ -5,3 +5,5 @@ lxml
 toml
 google-api-python-client
 munch
+pillow
+numpy

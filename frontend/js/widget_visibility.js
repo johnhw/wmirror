@@ -82,7 +82,7 @@ widget_visibility = {
         {
             var d = parseFloat(k);     
             // compute visibility of the region at this distance and set opacity accordingly
-            var obscured = sigmoid((d-vis_distance/2)/(vis_distance/2));                        
+            var obscured = sigmoid((d-vis_distance/3)/(vis_distance/3));                        
             distances[k].fill({opacity:obscured});
         }
 

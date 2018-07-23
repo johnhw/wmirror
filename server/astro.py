@@ -16,11 +16,18 @@ def local_transit(transit, body, location, date, horizon='0', use_center=False):
     transit_fn = {"noon":location.next_transit, 
     "rising":location.previous_rising, 
     "setting":location.next_setting}[transit]    
+    
     try:
-        if use_center:
-            time = transit_fn(body, use_center=use_center)
+        # make sure we get the next setting, after *todays* rising
+        # even if it is after sunset now
+        if transit!="rising":
+            start = location.previous_rising(body, use_center=use_center)
         else:
-            time = transit_fn(body)
+            start = None
+        if use_center:
+            time = transit_fn(body, use_center=use_center, start=start)
+        else:
+            time = transit_fn(body, start=start)
         return time
     except ephem.AlwaysUpError:
         # polar regions, in polar summer
@@ -159,7 +166,7 @@ class Astro:
         day['setting'] = format_date(body, here, local_transit('setting',  self.sun, here, rising))
         
         # compute the set/rise times for twilights
-        twilights = {'civil':'-6', 'nautical':'-12', 'astronomical':'-18'}
+        twilights = {'true':'0', 'civil':'-6', 'nautical':'-12', 'astronomical':'-18'}
         for name, degrees in twilights.items():
             day[name] = {}                     
             day[name]['rising'] =  format_date(body, here, local_transit('rising',  self.sun, here, date, use_center=True, horizon=degrees))

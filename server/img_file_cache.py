@@ -25,7 +25,9 @@ def download_file_resize(path, cfg):
         img = img.crop(crop)
     if cfg.get("rotate"):
         img = img.rotate(cfg["rotate"])
-    # rescale to target size following any crop
+
+    #img = img.convert('L', matrix=[0.5,1,0,0])#.convert('rgb')
+    # # rescale to target size following any crop
     img = img.resize((width, height), resample=Image.LANCZOS)
     img.save(path)
 

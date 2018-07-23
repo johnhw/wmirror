@@ -13,7 +13,7 @@ widget_date = {
     update:function(json)
     {    
         this.text.text(json.date);                
-        fit_svg(this.text, this.bbox);
+        fit_svg(this.text, this.bbox, 1.0);
     }
 }
 

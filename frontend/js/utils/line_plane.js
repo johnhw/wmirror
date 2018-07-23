@@ -19,5 +19,3 @@ function findLinePlaneIntersectionCoords(px, py, pz, qx, qy, qz, a, b, c, d) {
     };
 }
 
-// Example (plane at y = 10  and perpendicular line from the origin)
-console.log(JSON.stringify(findLinePlaneIntersectionCoords(0,0,0,0,1,0,0,1,0,-10)));

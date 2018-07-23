@@ -24,17 +24,20 @@
 
 <!-- local imports -->
 
-<script type="text/javascript" src="js/utils/perspective.js"></script>
-<script type="text/javascript" src="js/utils/labels.js"></script>
+<script type="text/javascript" src="js/widgets.js"></script>
 <script type="text/javascript" src="js/config.js"></script>
 <script type="text/javascript" src="js/schedule.js"></script>
-<script type="text/javascript" src="js/utils.js"></script>
-<script type="text/javascript" src="js/icon_map.js"></script>
-<script type="text/javascript" src="js/widgets.js"></script>
-<script type="text/javascript" src="js/line_plane.js"></script>
-<script type="text/javascript" src="js/timeseries.js"></script>
+
+<script type="text/javascript" src="js/utils/perspective.js"></script>
+<script type="text/javascript" src="js/utils/labels.js"></script>
+<script type="text/javascript" src="js/utils/utils.js"></script>
+<script type="text/javascript" src="js/utils/icon_map.js"></script>
+<script type="text/javascript" src="js/utils/line_plane.js"></script>
+<script type="text/javascript" src="js/utils/timeseries.js"></script>
 
 <!-- widgets -->
+<script type="text/javascript" src="js/widget_solar_day.js"></script>
+<script type="text/javascript" src="js/widget_minmax_temperature.js"></script>
 <script type="text/javascript" src="js/widget_time_weather.js"></script>
 <script type="text/javascript" src="js/widget_visibility.js"></script>
 <script type="text/javascript" src="js/widget_uv.js"></script>
@@ -56,11 +59,12 @@
 <script type="text/javascript" src="js/widget_main_wind.js"></script>
 <script type="text/javascript" src="js/widget_signature.js"></script>
 
-Visiblity and UV index widgets
+
 Change the forecast to use the correct index (not index 0), but the latest index closest to midday
-Add maps intergration
-Add timeseries
-Add mini-forecast widget
+Add maps integration
+Add remaining timeseries
+Add mini-forecast widget for future days
+Remaining metoffice images to be added
 Styling should be factored out in palettes, sizes, etc.
 Update w/o flicker
 Arrange items on rose with correct z-order

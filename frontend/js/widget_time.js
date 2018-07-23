@@ -10,7 +10,7 @@ widget_time = {
 
     update:function(json){
         this.text.text(json.time);         
-        fit_svg(this.group, this.bbox);
+        fit_svg(this.group, this.bbox,1.1);
     },
 }
 

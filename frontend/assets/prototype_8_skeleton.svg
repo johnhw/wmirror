@@ -24,8 +24,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.70710678"
-     inkscape:cx="656.33381"
-     inkscape:cy="1354.5746"
+     inkscape:cx="672.89921"
+     inkscape:cy="1139.9823"
      inkscape:document-units="px"
      inkscape:current-layer="layer3"
      showgrid="true"
@@ -766,12 +766,12 @@
        id="wind_timeseries"
        style="opacity:1;fill:#ff0000;fill-opacity:0.19463088;fill-rule:nonzero;stroke:none;stroke-width:0.75809658;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.15;paint-order:normal" />
     <rect
-       style="opacity:1;fill:#ff0000;fill-opacity:0.19463088;fill-rule:nonzero;stroke:none;stroke-width:0.82298946;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.15;paint-order:normal"
-       id="day_timeseries"
+       style="opacity:1;fill:#ff0000;fill-opacity:0.19463088;fill-rule:nonzero;stroke:none;stroke-width:0.60787159;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.15;paint-order:normal"
+       id="timeseries_solar_day"
        width="287.3667"
-       height="29.641119"
+       height="16.170734"
        x="-0.18113501"
-       y="285.25967"
+       y="298.73007"
        inkscape:label="#rect30881" />
     <flowRoot
        xml:space="preserve"
@@ -838,6 +838,14 @@
        height="12.241875"
        x="5.8704529"
        y="26.300104"
+       inkscape:label="#rect30881" />
+    <rect
+       style="opacity:1;fill:#ff0000;fill-opacity:0.19463088;fill-rule:nonzero;stroke:none;stroke-width:0.19220614;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.15;paint-order:normal"
+       id="rect217562"
+       width="36.287796"
+       height="12.80314"
+       x="153.29631"
+       y="123.68707"
        inkscape:label="#rect30881" />
   </g>
 </svg>

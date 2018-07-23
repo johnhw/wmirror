@@ -3,9 +3,11 @@ var MS_PER_MINUTE = 60 * MS_PER_SECOND;
 var MS_PER_HOUR = 60 * MS_PER_MINUTE;
 var MS_PER_DAY = MS_PER_HOUR * 24;
 
+// Line graph time series, with simple y axis labels
+// aligned to the global time index 
 class TimeSeries 
 {
-    constructor(label, min, max, units, bbox, margin=0.7)
+    constructor(label, min, max, units, bbox, margin=0.7, stair=false)
     {
         this.label = label;
         this.min = min;
@@ -13,6 +15,7 @@ class TimeSeries
         this.units = units;
         this.bbox = bbox;
         this.margin = margin;
+        this.stair = stair;
         this.path = draw.polyline([]);
         this.group = draw.group();                
         this.render_base();
@@ -54,14 +57,21 @@ class TimeSeries
         this.path.remove();
         
         var path = [];
+        
         for(var i=0;i<times.length;i++)
         {
             var x = time_xpos(new Date(times[i]));
-            var y = this.y(ys[i]);
+            var y = this.y(ys[i]);     
+            // allow for stair step graphs, as well as line graphs       
+            if(this.stair && i>0)
+            {
+                path.push(x);
+                path.push(this.y(ys[i-1]));                
+            }
             path.push(x);
             path.push(y);
         }        
-        this.path = draw.polyline(path).stroke({color:"#fff", width:2}).fill({color:"#000", opacity:0.2});
+        this.path = draw.polyline(path).stroke({color:"#fff", width:2}).fill({color:"#000", opacity:0.4});
     }
 
 }
