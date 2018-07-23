@@ -6,6 +6,17 @@ from lxml import etree
 
 
 """
+For observations:
+
+G gust mph
+T temperature C
+V visibility m
+D wind direction compass
+S wind speed mph
+P pressure hpa
+Pt pressure tendency Pa/s
+Dp units C
+H humidity %
 
 U int The strength of the sun's ultraviolet (UV) radiation is expressed as a 'Solar UV Index', a system
 developed by the World Health Organization. These Met Office forecasts include the effects of:
@@ -166,15 +177,21 @@ def inshore_forecast(area):
 def sites():
     return query("sitelist")
 
+def obs_sites():
+    return query("sitelist", mode="wxobs")
 
-def nearest_station(lon, lat):
+def nearest_station(lon, lat, observation=False):
     # find the nearest weather station to the given observer
     observer = ephem.Observer()
     observer.lon = lon
     observer.lat = lat
-    sitelist = sites()
+    
+    if observation:
+        sitelist = obs_sites()
+    else:
+        sitelist = sites()
     angles = []
-    for site in sitelist["Locations"]["Location"]:    
+    for site in sitelist["Locations"]["Location"]:            
         # construct a new observer
         site_obs = ephem.Observer()    
         site_obs.lon = site["longitude"]
@@ -258,11 +275,35 @@ def get_image_uri(uri):
     # substitute api key
     return substitute(uri, {"key":api_key})    
 
+
+def find_nearest_stations(lat, lon):
+    # find the nearest weather stations
+    stations = {}
+    # first, those with forecasts
+    stations["forecast"] = nearest_station(lon=lon, lat=lat)["id"]    
+    observation_station = nearest_station(lon=lon, lat=lat, observation=True)
+    # next, those with synoptic observations (may be more distant)
+    stations["observation"] = observation_station["id"]
+    stations["region"] = observation_station["region"]
+    txt_sitelist = txtquery('sitelist')
+    # iterate over forecast regions, find one with a matching name
+    for location in txt_sitelist["Locations"]["Location"]:
+        id, name = location["@id"], location["@name"]
+        if name==stations["region"]:
+            stations["region_id"] = id
+    return stations
+
+
+
+import pprint
+
+#pprint.pprint(obs_sites())
 #print(forecast("353917"))
-#print(observation("353917"))
+#print(nearest_station(lat='60:11:37', lon = '-1:17:40', observation=True))
+#print(find_nearest_stations(lat='60:11:37', lon = '-1:17:40'))
+#pprint.pprint(observation("3005"))
 #print(txtquery('sitelist'))
 #print(txtquery('500'))
-#import pprint
 #pprint.pprint(obsimage())
 #pprint.pprint(surface())
 #print(localforecast('iw18'))

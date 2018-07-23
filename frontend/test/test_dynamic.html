@@ -1,0 +1,51 @@
+<html>
+<head>
+</head>
+<body>
+
+  
+  
+  <script>
+
+    // from: https://stackoverflow.com/questions/14521108/dynamically-load-js-inside-js
+    var loadJS = function(url, implementationCode, location){
+        //url is URL of external file, implementationCode is the code
+        //to be called from the file, location is the location to 
+        //insert the <script> element        
+        /*var scriptTag = document.createElement('script');
+        scriptTag.src = url;        
+        scriptTag.onload = implementationCode;
+        scriptTag.onreadystatechange = implementationCode;        
+        location.appendChild(scriptTag);
+        */
+        console.log(url);
+        implementationCode();
+    };
+
+    
+    function load_modules(modules, fn)
+    {
+        var i=0;        
+        function next_module()
+        {
+            if(i>=modules.length)  return;  // stop at the end
+            i += 1;
+            mod = modules[i-1];        
+            loadJS(mod, next_module, document.body);        
+        }
+        next_module();
+        fn();
+    }
+
+    function init()
+    {
+        console.log("INIT");
+    }
+
+    load_modules(["rose", "moon", "date"], init);
+
+  </script>
+
+
+</body>
+</html>

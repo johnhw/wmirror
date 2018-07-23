@@ -12,7 +12,7 @@ json_endpoints = [
     '/date',
     '/version',
     '/time',
-    '/metoffice/closest_station',
+    '/metoffice/observation',
     '/metoffice/forecast',
     '/metoffice/inshore_forecast',
     '/metoffice/shipping_forecast',

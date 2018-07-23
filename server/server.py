@@ -28,6 +28,9 @@ with open("config.toml") as f:
 # root for static files (e.g. index.html, CSS, JS, etc.)
 static_root = '../frontend'
 
+config.metoffice.stations = munch.Munch.fromDict(metoffice.find_nearest_stations(lon=config.location.lon, lat=config.location.lat))
+
+
 ## Routes
 @route('/cached_img/<filename>')
 def cached_image(filename):    
@@ -37,9 +40,6 @@ def cached_image(filename):
             expiry_hours=config.images[filename].get("expiry_hours",4))        
         root, fname = os.path.split(local_file)              
         return static_file(fname, root=root)
-
-
-
 
 ## Routes
 @route('/image/<filename>')
@@ -96,24 +96,22 @@ def curtime():
     return {"time":current_time, "timezone":tz, "isotime":dt.isoformat()}    
 
 ## forecasts 
-@route('/metoffice/closest_station')
-def closest_station():
-    # returns the numeric id of the metoffice station closest
-    # to the current location. This may not have useful forecasts, however!
-    return metoffice.nearest_station(lon=astro_observer.lon, 
-    lat=astro_observer.lat)
-
 @route('/metoffice/forecast')
 def full_forecast():
     # return the metoffice forecast for the current station
     # in its native foremat
-    return metoffice.forecast(config.metoffice.station_id)
+    return metoffice.forecast(config.metoffice.stations.forecast)
 
+@route('/metoffice/observation')
+def observations():
+    # return the metoffice forecast for the current station
+    # in its native foremat
+    return metoffice.observation(config.metoffice.stations.observation)
 
 @route('/metoffice/text_forecast')
 def text_forecast():
     # return the metoffice text regional forecast for the current region    
-    return metoffice.forecast(config.metoffice.region_id)
+    return metoffice.txtquery(config.metoffice.stations.region)
 
 @route('/metoffice/inshore_forecast')
 def inshore_forecast():    
