@@ -21,6 +21,17 @@ class TimeSeries
         this.render_base();
     }
 
+    // add a new vertical line
+    add_hline(y, label="")
+    {
+        var yv = this.y(y);
+        var line = this.group.line(0, yv, this.bbox.w, yv).stroke({color:"#fff", width:0.5});
+        var text = this.group.text(label);
+        var text_h = text.bbox().h; // note: assumes min and max labels will be same height                
+        text.move(20, yv-text_h/2).id("text_style");
+        return line;
+    }
+
     x(date)
     {
         return time_xpos(date);
@@ -54,13 +65,20 @@ class TimeSeries
 
     update(times, ys)
     {
+        
         this.path.remove();
         
         var path = [];
-        
+        // start point just before axis
+        path.push(-20);
+        path.push(this.y(0));
         for(var i=0;i<times.length;i++)
         {
+            
             var x = time_xpos(new Date(times[i]));
+
+            if(x===null) continue; // x is outside of range; skip this item            
+            
             var y = this.y(ys[i]);     
             // allow for stair step graphs, as well as line graphs       
             if(this.stair && i>0)
@@ -71,7 +89,11 @@ class TimeSeries
             path.push(x);
             path.push(y);
         }        
-        this.path = draw.polyline(path).stroke({color:"#fff", width:2}).fill({color:"#000", opacity:0.4});
+        // end point beyond screen, on axis
+        path.push(this.bbox.w+20);
+        path.push(this.y(0));
+        
+        this.path = draw.polyline(path).stroke({color:"#fff", width:3}).fill({color:"#000", opacity:0.5});
     }
 
 }

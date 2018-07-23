@@ -24,9 +24,7 @@
 
 <!-- local imports -->
 
-<script type="text/javascript" src="js/widgets.js"></script>
-<script type="text/javascript" src="js/config.js"></script>
-<script type="text/javascript" src="js/schedule.js"></script>
+
 
 <script type="text/javascript" src="js/utils/perspective.js"></script>
 <script type="text/javascript" src="js/utils/labels.js"></script>
@@ -35,7 +33,12 @@
 <script type="text/javascript" src="js/utils/line_plane.js"></script>
 <script type="text/javascript" src="js/utils/timeseries.js"></script>
 
+<script type="text/javascript" src="js/widgets.js"></script>
+<script type="text/javascript" src="js/config.js"></script>
+<script type="text/javascript" src="js/schedule.js"></script>
+
 <!-- widgets -->
+<script type="text/javascript" src="js/widget/time_temp.js"></script>
 <script type="text/javascript" src="js/widget/solar_day.js"></script>
 <script type="text/javascript" src="js/widget/minmax_temperature.js"></script>
 <script type="text/javascript" src="js/widget/time_weather.js"></script>
@@ -130,6 +133,11 @@ function init(skeleton_group)
     var second_timer = setInterval(updateSecond,1000);
 }
 
+
+ request("/metoffice/forecast_observation", function(json)
+            {             
+                console.log(weather_array(json));                
+            });
 
 // Get the skeleton document which has the layout information
 raw_request("/assets/prototype_8_skeleton.svg", svg=>{

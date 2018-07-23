@@ -30,24 +30,20 @@ widget_solar_day = {
     },
 
     update:function(json){
+        
         var bbox = this.bbox;
         function set_day_rect(period, section)
         {            
             
-            // no sunrise at all!
-            if(section.rising.date=='never')
+            // no sunrise at all or no sunset at all
+            if(section.rising.date=='never' || section.rising.date=='always')
             {
                 period.box.x(0);
                 period.box.width(0);
+                period.rise_label.text("");
+                period.set_label.text("");
                 return;
-            }
-            // sun all day long!
-            if(section.rising.date=='always')
-            {
-                period.box.x(0);
-                period.box.width(time_xpos(today_tomorrow().tomorrow));
-                return;
-            }
+            }        
             var rise_date = new Date(section.rising.date);
             var set_date = new Date(section.setting.date);
             // compute the left and right of the highlighted box

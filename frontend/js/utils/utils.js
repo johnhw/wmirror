@@ -11,6 +11,9 @@ function pad(n, width, z) {
 }
 // end
 
+
+
+
 function sph2cart(az, el)
 {
     var v1 = [Math.cos(el) * Math.sin(az), -Math.sin(el), Math.cos(el) * Math.cos(az)];            
@@ -49,6 +52,36 @@ function general_forecast(json, day=0)
 {
     return json.SiteRep.DV.Location.Period[day].Rep[0];  
 }
+
+// given a forecast and observation data, return the forecast
+// data closest to the given datetime
+
+// return a weather and observation array in a sensible format
+function weather_array(forecast_observation, date)
+{
+    var concatenated_forecast = [];    
+    var forecast_periods = forecast_observation.forecast.SiteRep.DV.Location.Period;
+    var observation_periods = forecast_observation.observation.SiteRep.DV.Location.Period;
+    var combined_periods = observation_periods.concat(forecast_periods);
+    var reps = [];
+
+    combined_periods.forEach(function (period)    
+    {
+        var ymd = period.value.slice(0, -1).split("-");    
+        // Note: times are zulu (i.e. UTC, not local time)
+        // and crazy one month offset for zero-based javascript months :)
+        var date = new Date(Date.UTC(ymd[0], ymd[1]-1, ymd[2], 0, 0, 0, 0));                
+        period.Rep.forEach(function (rep)
+        {
+            var offset_minutes = rep["$"];            
+            var rep_date = new Date(date.getTime()+MS_PER_MINUTE*offset_minutes);            
+            rep.date = rep_date;
+            reps.push(rep);
+        });
+    });
+    return reps;
+}
+
 
 // Fetch a URL (via GET), parse as JSON and
 // send to the given callback

@@ -102,6 +102,14 @@ def full_forecast():
     # in its native foremat
     return metoffice.forecast(config.metoffice.stations.forecast)
 
+## forecasts 
+@route('/metoffice/forecast_observation')
+def full_forecast():
+    # return the metoffice forecast for the current station
+    # in its native format and the observation data, in one call
+    return {"forecast":metoffice.forecast(config.metoffice.stations.forecast), 
+            "observation":metoffice.observation(config.metoffice.stations.observation)}
+
 @route('/metoffice/observation')
 def observations():
     # return the metoffice forecast for the current station

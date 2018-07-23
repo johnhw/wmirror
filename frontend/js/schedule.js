@@ -9,6 +9,11 @@ data_sources = {
         url:'/metoffice/forecast',
         update:'hour',
     },
+    'forecast_observation' : {
+        url:'/metoffice/forecast_observation',
+        update:'hour',
+        post_fn:weather_array, // post process into a sensible format
+    },
     'wifi' :
     {
         url:'/wifi',
@@ -134,17 +139,21 @@ function update_datasource(data)
         // fetch data (even if no deps)
         request(data.url, function(json)
             {             
-                data.json = json; // cache data                  
-                handle_data_deps(data);    
+                if(data.post_fn)
+                    // optionally apply any postprocessing before passing on
+                    data.json = data.post_fn(json);
+                else
+                    data.json = json; // cache data                  
+                handle_data_deps(data); 
             });
     }
     else
     {
         // no URL, just call the function
-        data.json = {};
-        handle_data_deps(data);
+        data.json = {};        
+        handle_data_deps(data); 
     }
-
+       
 }
 
 function schedule_fetch()
