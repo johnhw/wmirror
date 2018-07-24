@@ -15,7 +15,7 @@ D wind direction compass
 S wind speed mph
 P pressure hpa
 Pt pressure tendency Pa/s
-Dp units C
+Dp wet bulb? units C
 H humidity %
 
 U int The strength of the sun's ultraviolet (UV) radiation is expressed as a 'Solar UV Index', a system
@@ -280,7 +280,7 @@ def find_nearest_stations(lat, lon):
     # find the nearest weather stations
     stations = {}
     # first, those with forecasts
-    stations["forecast"] = nearest_station(lon=lon, lat=lat)["id"]    
+    stations["forecast"] = nearest_station(lon=lon, lat=lat, observation=True)["id"]    
     observation_station = nearest_station(lon=lon, lat=lat, observation=True)
     # next, those with synoptic observations (may be more distant)
     stations["observation"] = observation_station["id"]
@@ -301,7 +301,7 @@ import pprint
 #print(forecast("353917"))
 #print(nearest_station(lat='60:11:37', lon = '-1:17:40', observation=True))
 #print(find_nearest_stations(lat='60:11:37', lon = '-1:17:40'))
-pprint.pprint(observation("3005"))
+#pprint.pprint(observation("3005"))
 #print(txtquery('sitelist'))
 #print(txtquery('500'))
 #pprint.pprint(obsimage())

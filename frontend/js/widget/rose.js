@@ -265,6 +265,10 @@ function project_onto(ray_start, polygon, plane)
     polygon.forEach(function(v)
     {
         var v_proj = findLinePlaneIntersectionCoords(ray_start[0], ray_start[1], ray_start[2], v[0], v[1], v[2], plane[0], plane[1], plane[2], plane[3]);
+        if(vec3.length(v_proj)>1.0)
+        {
+            vec3.normalize(v_proj, v_proj);
+        }
         projected.push([v_proj.x, v_proj.y, v_proj.z]);
     });
     return projected;
@@ -368,12 +372,14 @@ function init_rose(bbox)
             alert('Could not load font: ' + err);
         } else {
         global_font = font;    
-        compass_group = draw.group();        
+        
+    
+        compass_group = draw.group();     
         make_layer_separators();
         
         compass(compass_group);        
         fit_svg(compass_group, bbox, 0.8);
-        
+      
         // get each of the sub-components
         request("/astro/solar_day", json=>{draw_day(json)});  
         request("/astro/transits", json=>{draw_transits(json)});

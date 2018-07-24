@@ -69,9 +69,7 @@ class TimeSeries
         this.path.remove();
         
         var path = [];
-        // start point just before axis
-        path.push(-20);
-        path.push(this.y(0));
+        var last_y = null;
         for(var i=0;i<times.length;i++)
         {
             
@@ -80,6 +78,15 @@ class TimeSeries
             if(x===null) continue; // x is outside of range; skip this item            
             
             var y = this.y(ys[i]);     
+            if(last_y===null)
+            {   
+                // start point just before axis
+                path.push(-20);
+                path.push(this.y(0));
+                path.push(-20);
+                path.push(y);
+            }
+            last_y = y;
             // allow for stair step graphs, as well as line graphs       
             if(this.stair && i>0)
             {
@@ -89,9 +96,13 @@ class TimeSeries
             path.push(x);
             path.push(y);
         }        
+
         // end point beyond screen, on axis
         path.push(this.bbox.w+20);
+        path.push(last_y);
+        path.push(this.bbox.w+20);
         path.push(this.y(0));
+        
         
         this.path = draw.polyline(path).stroke({color:"#fff", width:3}).fill({color:"#000", opacity:0.5});
     }

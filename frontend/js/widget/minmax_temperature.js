@@ -20,8 +20,8 @@ widget_minmax_temperature = {
                 if(rep.T<min) min=rep.T;
             });
 
-        this.text.text("Min:" +min + "° Max:" + max+"°");
-        fit_svg(this.group, this.bbox, 0.7);
+        this.text.text(min + "° -> " + max+"°");
+        fit_svg(this.group, this.bbox, 0.8);
     }
 
 }

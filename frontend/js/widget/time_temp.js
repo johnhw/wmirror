@@ -11,13 +11,7 @@ widget_temp_timeseries = {
     },
 
     update:function(json){
-        var times = [];
-        var temps = [];
-        json.forEach(function(elt)
-        {
-            times.push(elt.date);
-            temps.push(parseFloat(elt.T));
-        });
+        [times, temps] = get_weather_time(json, 'T')
         this.time_series.update(times=times, y=temps);                 
     },
 }

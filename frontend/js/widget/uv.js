@@ -3,7 +3,8 @@
 function uv_name(uv)
 {
     var scale = ["Low", "Moderate", "High", "Very High", "Extreme"];
-    var name = scale[Math.min(Math.floor(uv/2-0.5), 4)];
+    
+    var name = scale[Math.max(Math.min(Math.floor(uv/2-0.5), 4),0)];
     return name; //+ " (" + name+")";    
 }
 

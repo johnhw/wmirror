@@ -39,7 +39,12 @@ widget_solar_day = {
             if(section.rising.date=='never' || section.rising.date=='always')
             {
                 period.box.x(0);
-                period.box.width(0);
+                // bar from 00:00 -> 00:00 tomorrow
+                if(section.rising.date=='always')
+                    period.box.width(time_xpos(new Date(today_tomorrow().tomorrow)));
+                else
+                    period.box.width(0); // no highlight if no sun
+
                 period.rise_label.text("");
                 period.set_label.text("");
                 return;

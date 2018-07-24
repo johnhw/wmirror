@@ -76,7 +76,7 @@ widget_visibility = {
     // update the visibility of each landmass region
     update:function(json)
     {        
-        var vis = get_visibility(general_forecast(json));
+        var vis = get_visibility(general_forecast(json));        
         var vis_distance = visibility_distances[vis];
         for(var k in distances)
         {
@@ -85,10 +85,8 @@ widget_visibility = {
             var obscured = sigmoid((d-vis_distance/3)/(vis_distance/3));                        
             distances[k].fill({opacity:obscured});
         }
-
         fit_svg(this.group, this.bbox, 1.0);
     }
-
 }
 
 // Simple visibility text
