@@ -298,9 +298,9 @@ def find_nearest_stations(lat, lon):
 import pprint
 
 #pprint.pprint(obs_sites())
-#print(forecast("353917"))
-#print(nearest_station(lat='60:11:37', lon = '-1:17:40', observation=True))
-#print(find_nearest_stations(lat='60:11:37', lon = '-1:17:40'))
+#print(forecast("3005"))
+#print(nearest_station(lat='60:00:00', lon = '-1:00:00', observation=True))
+#print(find_nearest_stations(lat='60:00:00', lon = '-1:00:00'))
 #pprint.pprint(observation("3005"))
 #print(txtquery('sitelist'))
 #print(txtquery('500'))

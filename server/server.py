@@ -28,6 +28,11 @@ with open("config.toml") as f:
 # root for static files (e.g. index.html, CSS, JS, etc.)
 static_root = '../frontend'
 
+with open("../secrets/keys.json") as f:
+    secrets = json.load(f)
+
+config.location.lon, config.location.lat = secrets["lon"], secrets["lat"]
+
 config.metoffice.stations = munch.Munch.fromDict(metoffice.find_nearest_stations(lon=config.location.lon, lat=config.location.lat))
 
 
