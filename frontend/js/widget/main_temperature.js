@@ -14,8 +14,8 @@ widget_main_temperature = {
         this.text.text(function(add)
         {
             add.tspan(general_forecast(json).T+"°").newLine();
-            add.tspan(general_forecast(json).F+"°").newLine().fill({opacity:0.3});
-        });
+            add.tspan(general_forecast(json).F+"°").fill({opacity:0.3}).newLine();
+        }).leading(0.85);
         fit_svg(this.group, this.bbox, 1.1);
     }
 

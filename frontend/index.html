@@ -39,6 +39,7 @@
 <script type="text/javascript" src="js/schedule.js"></script>
 
 <!-- widgets -->
+<script type="text/javascript" src="js/widget/synoptic.js"></script>
 <script type="text/javascript" src="js/widget/pressure.js"></script>
 <script type="text/javascript" src="js/widget/time_temp.js"></script>
 <script type="text/javascript" src="js/widget/solar_day.js"></script>
@@ -64,18 +65,17 @@
 <script type="text/javascript" src="js/widget/main_wind.js"></script>
 <script type="text/javascript" src="js/widget/signature.js"></script>
 
-
-Rose fixes, including z-order, clipping shadow, update rates
+Add holidays widget
+load synoptic from cache and apply image inversion
+likewise, composite sat images before returning
+Look at getting wind and wave forecasts from the grib2 files / wavewatcherIII
+Rose fixes, including z-order, update rates
 Change the forecast to use the correct index (not index 0), but the latest index closest to midday
-Add maps integration
 Add remaining timeseries
 Add mini-forecast widget for future days
-Remaining metoffice images to be added
 Styling should be factored out in palettes, sizes, etc.
 Testing: flicker on updates
 Testing: vary time and date
-Arrange items on rose with correct z-order
-
 
 <script>
 
@@ -146,7 +146,7 @@ function init(skeleton_group)
             });
 
 // Get the skeleton document which has the layout information
-raw_request("/assets/prototype_8_skeleton.svg", svg=>{
+raw_request("/assets/prototype_9_skeleton.svg", svg=>{
     var skeleton_group = draw.group();
     skeleton_group.svg(svg);
     skeleton_group.attr({'visibility':'hidden'})

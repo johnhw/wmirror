@@ -256,6 +256,7 @@ function draw_day(json)
                   
 }
 
+var gnomon_scale = 500.0;
 // project a ray from a source point through each point
 // of the polygon onto the given plane. Return the
 // correspodning polygon projected onto this plane.
@@ -265,11 +266,13 @@ function project_onto(ray_start, polygon, plane)
     polygon.forEach(function(v)
     {
         var v_proj = findLinePlaneIntersectionCoords(ray_start[0], ray_start[1], ray_start[2], v[0], v[1], v[2], plane[0], plane[1], plane[2], plane[3]);
-        if(vec3.length(v_proj)>1.0)
+        
+        var v_p  = [v_proj.x, v_proj.y, v_proj.z];
+        if(vec3.length(v_p)>1/gnomon_scale)
         {
-            vec3.normalize(v_proj, v_proj);
+            vec3.scale(v_p, vec3.normalize(v_p, v_p), 1/gnomon_scale);
         }
-        projected.push([v_proj.x, v_proj.y, v_proj.z]);
+        projected.push(v_p);
     });
     return projected;
 }
@@ -311,13 +314,13 @@ function draw_gnomon(sun)
         // rotate about axis as needed
         gnomon_poly.forEach(function(v) { v3 = vec3.create(); vec3.rotateY(v3,v,[0,0,0],angle); rotated_poly.push(v3); });
         gnomon_poly = rotated_poly;
-        var gnomon = perspective_polygon(scale_list(gnomon_poly,500)).fill({"color":"#fff"});
+        var gnomon = perspective_polygon(scale_list(gnomon_poly,gnomon_scale)).fill({"color":"#fff"});
         gnomon.before(gnomon_marker);
         
         if(-sun_pos[1]>gnomon_h)
         {
             var shadow_poly = project_onto(sun_pos, gnomon_poly, [0,1,0,0]);    
-            var gnomon_shadow = perspective_polygon(scale_list(shadow_poly,500)).fill({"color":"#000"});   
+            var gnomon_shadow = perspective_polygon(scale_list(shadow_poly,gnomon_scale)).fill({"color":"#000"});   
             gnomon_shadow.after(gnomon_marker);
             g.add(gnomon_shadow);
         }    

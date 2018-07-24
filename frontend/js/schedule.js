@@ -5,6 +5,11 @@
 // given. updates always happen at most 1 second past the 
 // turnover for that period (e.g. daily between 00:00:00 and 00:00:01)
 data_sources = {
+    'synoptic_map':
+    {
+        url:'/metoffice/synoptic_map',
+        update:'hour',
+    },
     'forecast' : {
         url:'/metoffice/forecast',
         update:'hour',
@@ -132,7 +137,7 @@ function handle_data_deps(data)
                 try
                 {
                     update_widget.update(data.json || null);
-                    console.log(widget + " update OK");
+                    console.log(dep + " update OK");
                 }
                 catch(err)
                 {
@@ -144,7 +149,7 @@ function handle_data_deps(data)
 }
 
 function update_datasource(data)
-{
+{    
     // postprocess the data and pass it to all waiting handlers
     function process_data(json)
     {
@@ -196,12 +201,12 @@ function schedule_fetch()
         if(updates[name]!=schedule_latches[name])
         {
             flags.push(name);
-            schedule_latches[name] = updates[name];
+            schedule_latches[name] = updates[name];            
         }
     }  
     // now refresh all of the data sources
     for(var source in data_sources)
-    {
+    {        
         var data = data_sources[source];                
         if(flags.indexOf(data.update)!=-1)
         {                 

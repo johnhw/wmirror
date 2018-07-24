@@ -107,13 +107,6 @@ def full_forecast():
     # in its native foremat
     return metoffice.forecast(config.metoffice.stations.forecast)
 
-## forecasts 
-@route('/metoffice/forecast_observation')
-def full_forecast():
-    # return the metoffice forecast for the current station
-    # in its native format and the observation data, in one call
-    return {"forecast":metoffice.forecast(config.metoffice.stations.forecast), 
-            "observation":metoffice.observation(config.metoffice.stations.observation)}
 
 @route('/metoffice/observation')
 def observations():
@@ -137,6 +130,21 @@ def shipping_forecast():
     return {"synopsis":forecast["synopsis"],
      "local_area":forecast["areas"][config.metoffice.shipping_area]}
 
+# images
+
+## forecasts 
+@route('/metoffice/satellite_images')
+def satellite_images():
+    # return the metoffice forecast for the current station
+    # in its native foremat
+    return metoffice.observed_images()
+
+@route('/metoffice/synoptic_map')
+def synoptic_map():
+    # return the metoffice forecast for the current station
+    # in its native foremat    
+    return {"map":metoffice.surface_pressure()}
+    
 ## astronomical computations (sun/moon location)
 
 # Astronomical calculations
