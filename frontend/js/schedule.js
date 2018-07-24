@@ -10,9 +10,19 @@ data_sources = {
         update:'hour',
     },
     'forecast_observation' : {
-        url:'/metoffice/forecast_observation',
+        // request from both forecast and observation, then
+        // fuse the arrays into one
+        fn : function(process){
+            request("/metoffice/forecast", function(forecast){
+                request("/metoffice/observation", function(observation)
+                {
+                    process({"forecast":forecast, "observation":observation})
+                });
+            });
+        },
+        //url:'/metoffice/forecast_observation',
         update:'hour',
-        post_fn:weather_array, // post process into a sensible format
+        post_fn: weather_array, // post process into a sensible format
     },
     'wifi' :
     {
@@ -122,6 +132,7 @@ function handle_data_deps(data)
                 try
                 {
                     update_widget.update(data.json || null);
+                    console.log(widget + " update OK");
                 }
                 catch(err)
                 {
@@ -134,26 +145,33 @@ function handle_data_deps(data)
 
 function update_datasource(data)
 {
+    // postprocess the data and pass it to all waiting handlers
+    function process_data(json)
+    {
+        if(data.post_fn)
+        // optionally apply any postprocessing before passing on
+            data.json = data.post_fn(json);
+        else
+            data.json = json; // cache data                  
+        handle_data_deps(data); 
+    }
+
     if(data.url)
     {
         // fetch data (even if no deps)
-        request(data.url, function(json)
-            {             
-                if(data.post_fn)
-                    // optionally apply any postprocessing before passing on
-                    data.json = data.post_fn(json);
-                else
-                    data.json = json; // cache data                  
-                handle_data_deps(data); 
-            });
+        request(data.url, function(json) {process_data(json);});
+    }
+    else if (data.fn)
+    {
+        // no url, but call a function instead; when this completes,
+        // it should call the passed argument
+        data.fn(process_data); 
     }
     else
     {
         // no URL, just call the function
-        data.json = {};        
-        handle_data_deps(data); 
-    }
-       
+        process_data({});        
+    }       
 }
 
 function schedule_fetch()
