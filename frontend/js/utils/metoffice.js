@@ -24,13 +24,18 @@ function weather_array(forecast_observation, date)
         var ymd = period.value.slice(0, -1).split("-");    
         // Note: times are zulu (i.e. UTC, not local time)
         // and crazy one month offset for zero-based javascript months :)
-        var date = new Date(Date.UTC(ymd[0], ymd[1]-1, ymd[2], 0, 0, 0, 0));                
+        var date = new Date(Date.UTC(ymd[0], ymd[1]-1, ymd[2], 0, 0, 0, 0));     
+        var last_date = null;           
         period.Rep.forEach(function (rep)
         {
             var offset_minutes = rep["$"];            
-            var rep_date = new Date(date.getTime()+MS_PER_MINUTE*offset_minutes);            
+            var rep_date = new Date(date.getTime()+MS_PER_MINUTE*offset_minutes);                        
             rep.date = rep_date;
-            reps.push(rep);
+            if(last_date===null || rep_date>last_date)
+            {
+                reps.push(rep);
+                last_date = rep_date;
+            }
         });
     });
     return reps;

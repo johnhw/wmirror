@@ -9,38 +9,41 @@ widget_time_weather = {
 
     update:function(json)
     {
-        this.group.select("*").remove();     
+        this.group.clear();     
         var bbox = this.bbox;             
         var group = this.group;    
-        function show_weather_icons(date, period, skip_small)
+        function show_weather_icons(json)
         {
-            
-            period.Rep.forEach(function(report)
-            {                        
-                var minute_offset = parseFloat(report["$"]);
-                var hour_date = new Date(date.getTime() + minute_offset * MS_PER_MINUTE);        
+            date = from_today(0);
+            [times, weathers] = get_weather_time(json, 'W')
+
+            for(var i=0;i<times.length;i++)
+            {   
+                // compensate for metoffice forecasts being off by one from the three hour
+                // schedule we expect                                                     
+                var hour_date = new Date(times[i].getTime() - MS_PER_HOUR);
                 var xpos = time_xpos(hour_date); // centre point of label                
                 var ypos = bbox.cy;        
                 var h = bbox.h;
-                var hour = Math.floor(minute_offset/60);
+                var hour = (hour_date-date) / MS_PER_HOUR;                
                 h = h / 1.5;
-                // make intermediate hours smaller                
-                if((hour/3)%2==1)
+                if(is_tick(hour))
                 {
-                    h = h / 2.0;
-                    if(skip_small) return; // skip small icons if requested
+                    if(is_minor_tick(hour))
+                    {
+                        h = h / 2.0;                        
+                    }                        
+                    // fit the icon into the right space on the timeline slot
+                    var box = {x:xpos-h/2, x2:xpos+h/2, w:h, cx:xpos,
+                            y:ypos-h/2, y2:ypos+h/2, h:h, cy:ypos};     
+                    var g = group.group();
+                    set_icon(box, icon_map.metoffice_general[weathers[i]].icon, g);      
                 }
-                // fit the icon into the right space on the timeline slot
-                var box = {x:xpos-h/2, x2:xpos+h/2, w:h, cx:xpos,
-                        y:ypos-h/2, y2:ypos+h/2, h:h, cy:ypos};     
-                var g = group.group();
-                set_icon(box, icon_map.metoffice_general[report.W].icon, g);      
-            });                
-
+            }
+            
         }        
-        show_weather_icons(today_tomorrow().today, json.SiteRep.DV.Location.Period[0], skip_small=false);
-        show_weather_icons(today_tomorrow().tomorrow, json.SiteRep.DV.Location.Period[1], skip_small=true);        
+        show_weather_icons(json);        
     }
 }
 
-register_widget(widget_time_weather, "time_forecast", ["forecast"]);
+register_widget(widget_time_weather, "time_forecast", ["forecast_observation"]);

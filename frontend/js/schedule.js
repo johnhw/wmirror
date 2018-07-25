@@ -49,6 +49,16 @@ data_sources = {
         url:'/image/aurora_prediction.jpg',
         update:'day',
     },
+    'synoptic_map' :
+    {
+        url:'/image/synoptic_map.gif',
+        update:'day',
+    },
+    'satellite_map' :
+    {
+        url:'/image/composite_map.png',
+        update:'day',
+    },
     'time' : {
         url:'/time',
         update:'minute',

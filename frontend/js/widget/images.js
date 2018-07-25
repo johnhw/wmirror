@@ -22,3 +22,5 @@ function image_widget()
 
 register_widget(image_widget(), "solar_map", ["solar_image"]);
 register_widget(image_widget(), "aurora_map", ["aurora_image"]);
+register_widget(image_widget(), "synoptic_map", ["synoptic_map"]);
+register_widget(image_widget(), "satellite_map", ["satellite_map"]);

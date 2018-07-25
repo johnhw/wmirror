@@ -23,7 +23,7 @@ widget_main_forecast_icon = {
     update:function(json)
     {
         var weather_type = general_forecast(json).W;
-        this.group.select("*").remove();        
+        this.group.clear();        
         set_icon(this.bbox, icon_map.metoffice_general[weather_type].icon, this.group);      
     }
 

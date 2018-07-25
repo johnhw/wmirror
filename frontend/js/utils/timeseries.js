@@ -110,6 +110,41 @@ class TimeSeries
 }
 
 
+
+
+var day_boxes = [];
+
+// Record the locations of the timeseries boxes (for all time series)
+function init_timeseries()
+{
+    
+    var day_box_names = ["today_timeseries", "tomorrow_timeseries", "day3_timeseries", "day4_timeseries", "day5_timeseries"];
+    day_box_names.forEach(function(name)
+    {        
+        day_boxes.push(SVG.get(name).rbox());
+    });           
+}
+
+
+// ticks specified in hours from midnight today
+var minor_ticks = [3,9,15,21];
+var major_ticks = [0,6,12,18,24,30,36,42,48+12,72+12,96+12];
+
+function is_major_tick(x)
+{
+    return major_ticks.includes(x);
+}
+
+function is_minor_tick(x)
+{
+    return minor_ticks.includes(x);
+}
+
+function is_tick(x)
+{
+    return is_minor_tick(x) || is_major_tick(x);
+}
+
 // Return the x position of the data for the given date
 // which should be a time in either today or tomorrow
 function time_xpos(date)
@@ -119,14 +154,14 @@ function time_xpos(date)
     var today_date = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     // period through the day, as a value 0.0 -> 1.0
     var interpolate = (date-today_date) / MS_PER_DAY;     
-    // today
-    if(interpolate<1.0)
+    
+    
+    // find the correct day and interpolate into it
+    if(interpolate>0 && interpolate<day_boxes.length)
     {        
-        return today_ts_bbox.x + interpolate * today_ts_bbox.w;
-    }
-    else if (interpolate<2.0)
-    {
-        return tomorrow_ts_bbox.x + (interpolate-1.0) * tomorrow_ts_bbox.w;
+        var box = day_boxes[Math.floor(interpolate)];        
+        var frac_interpolate = (interpolate - (Math.floor(interpolate)));
+        return box.x + frac_interpolate * box.w;        
     }
     else 
         return null;

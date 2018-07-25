@@ -11,6 +11,9 @@ function pad(n, width, z) {
 }
 // end
 
+
+
+
 function sph2cart(az, el)
 {
     var v1 = [Math.cos(el) * Math.sin(az), -Math.sin(el), Math.cos(el) * Math.cos(az)];            
@@ -19,12 +22,12 @@ function sph2cart(az, el)
 
 function fit_svg(group, bbox, scaling=1)
 {
-    // remove any existing transforms
+    // group must not have any scaling applied!
+    //group.transform({x:0, y:0, scale:1});
     group.untransform();
     var text_box = group.bbox(draw);
     var target_box = bbox;
     var scale_ratio = scaling*bbox.h/text_box.h;
-    // transform to bbox
     group.transform({rotation:0}).transform({x:target_box.x-text_box.x-text_box.w/2+target_box.w/2, 
         y:target_box.y-text_box.y-text_box.h/2+target_box.h/2}).transform({scale:scaling*scale_ratio});  
 }
@@ -40,6 +43,8 @@ function wrap_to_box(html_text, bbox)
     fobj.move(bbox.x, bbox.y);
     return {"container":fobj, "div":fobj.getChild(0)};
 }
+
+
 
 
 // Fetch a URL (via GET), parse as JSON and
@@ -80,3 +85,15 @@ function today_tomorrow()
     tomorrow.setDate(tomorrow.getDate()+1);                
     return {today:today_date, tomorrow:tomorrow}
 }
+
+// Return the datetimes for 00:00 n days after today
+function from_today(n)
+{
+    var date = new Date(Date.now());
+    // compute the date objects for 00:00 today and tomorrow
+    var today_date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    var future = new Date(today_date.valueOf());
+    future.setDate(future.getDate()+n);                
+    return future;
+}
+

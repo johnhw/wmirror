@@ -295,6 +295,41 @@ def find_nearest_stations(lat, lon):
 
 
 
+def get_current_synoptic_url():
+    urls = surface_pressure()
+    current_url = urls[0]["image_url"] # index 0 will be for the current time, increasing indexes for later forecasts
+    return current_url
+
+from PIL import Image, ImageOps, ImageChops    
+# get the satellite image
+def get_satellite_urls():
+    images = observed_images()
+    print(images)
+    result = {
+        "lighting":images["Lightning"][0][1],
+        "rainfall":images["Rainfall"][0][1],
+        'ir':images["SatelliteIR"][0][1],
+        'visible':images["SatelliteVis"][0][1],
+     }    
+    return result
+
+# compose all satellite images into one
+def get_satellite_composite(fname, cfg):
+    urls = get_satellite_urls()
+    imgs = {}
+    # iterate over all the bands, summing them to together
+    for name, url in urls.items():
+        r = requests.get(url, stream=True)
+        img = Image.open(r.raw)    
+        imgs[name] = img
+
+    base_img = imgs["visible"]
+    base_img = base_img.crop((0,0,base_img.width,base_img.height-60))
+    # write to the passed filename
+    base_img.save(fname)
+    
+    
+
 import pprint
 
 #pprint.pprint(obs_sites())
