@@ -129,6 +129,7 @@ function init_timeseries()
 // ticks specified in hours from midnight today
 var minor_ticks = [3,9,15,21];
 var major_ticks = [0,6,12,18,24,30,36,42,48+12,72+12,96+12];
+var n_days_ahead = 5;
 
 function is_major_tick(x)
 {

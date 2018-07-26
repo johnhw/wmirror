@@ -31,7 +31,7 @@ function weather_array(forecast_observation, date)
             var offset_minutes = rep["$"];            
             var rep_date = new Date(date.getTime()+MS_PER_MINUTE*offset_minutes);                        
             rep.date = rep_date;
-            if(last_date===null || rep_date>last_date)
+            if(last_date===null || rep_date.getTime()>last_date.getTime())
             {
                 reps.push(rep);
                 last_date = rep_date;

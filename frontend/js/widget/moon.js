@@ -48,6 +48,8 @@ widget_moon_icon = {
             phase = 1+phase;
             this.arc = this.group.path("M10 20 A 1 "+phase+" 0 0 "+side+" 10 0 A 1 1 0 0 1 10 20").fill("#fff").stroke("#fff");
         }
+        
+
 
         // compute the name 
         var phase_stage = Math.floor((angle / (2*Math.PI))*8 + 0.5);

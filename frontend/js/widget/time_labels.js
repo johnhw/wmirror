@@ -31,12 +31,7 @@ function day_labels(bbox)
         {
             font_size = 24;
             opacity = 0.1;
-        }
-        // solid line at end of day
-        if(hour_offset % 24==0)
-        {
-            opacity = 1.0;
-        }
+        }     
         
         draw.line(xpos, timeline_bbox.y, xpos, timeline_bbox.y2).stroke({color:"#fff", opacity:opacity});
         text_label.font({"size":font_size});

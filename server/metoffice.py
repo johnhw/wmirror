@@ -303,8 +303,7 @@ def get_current_synoptic_url():
 from PIL import Image, ImageOps, ImageChops    
 # get the satellite image
 def get_satellite_urls():
-    images = observed_images()
-    print(images)
+    images = observed_images()    
     result = {
         "lighting":images["Lightning"][0][1],
         "rainfall":images["Rainfall"][0][1],
