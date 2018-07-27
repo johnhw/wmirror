@@ -25,7 +25,7 @@ widget_moon_icon = {
         // compute sides of the arc to draw
         var side = 0;
         var flip = 0;       
-        
+        var orig_angle = angle;
         // work out the quadrant... 
         if(angle>Math.PI) { angle = 2*Math.PI-angle; flip=1;}
         if(angle>=0.5*Math.PI) { angle = Math.PI-angle; side=1;}
@@ -52,7 +52,7 @@ widget_moon_icon = {
 
 
         // compute the name 
-        var phase_stage = Math.floor((angle / (2*Math.PI))*8 + 0.5);
+        var phase_stage = Math.floor((orig_angle / (2*Math.PI))*8 + 0.5);
         if(phase_stage<0) phase_stage = 8;        
         var name = moon_phase_names[phase_stage % 8];
 

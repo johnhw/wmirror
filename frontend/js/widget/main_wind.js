@@ -6,7 +6,8 @@ function wind_arrow(g, speed, direction, bbox)
                  "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
 
     var rotation_angle = angles.indexOf(direction) * (Math.PI*2)/16.0 + Math.PI;
-    
+    var _speed = speed + "";
+
     raw_request('/assets/wind_arrow.svg', function(svg)
     {
         var wind_group = g.group();
@@ -16,7 +17,9 @@ function wind_arrow(g, speed, direction, bbox)
         // find centre point of arrow
         var ctr_point = SVG.get("wind_circle_centre");
         var ctr_box = ctr_point.rbox(wind_group);        
-        var text = wind_group.text(speed).id("text_style").style({"fill":"#000"}).font({"size":ctr_box.w*0.65}).move(0,0);
+        
+        var text = wind_group.text(_speed).id("text_style").style({"fill":"#000"}).font({"size":ctr_box.w*0.65}).move(0,0);
+        
         var tbbox = text.bbox(); 
         // move text onto it, centred
         text.move(ctr_box.cx-tbbox.cx,ctr_box.cy-tbbox.cy);           

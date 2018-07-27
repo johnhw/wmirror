@@ -35,8 +35,8 @@ config.location.lon, config.location.lat = secrets["lon"], secrets["lat"]
 config.metoffice.stations = munch.Munch.fromDict(metoffice.find_nearest_stations(lon=config.location.lon, lat=config.location.lat))
 
 # return the synoptic map when requested (by dynamic lookup of the URL) and apply inversion
-config.images["synoptic_map.gif"] = {"url":metoffice.get_current_synoptic_url, "width":891, "height":601, "expiry_hours":3, 
-"resize":True, "invert":True, "crop":[2,2,888,598]}
+config.images["synoptic_map.gif"] = {"url":metoffice.get_current_synoptic_url, "width":400, "height":400, "expiry_hours":3, 
+"resize":True, "invert":True, "crop":[220,135,640,535]}
 
 config.images["composite_map.png"] = {"fn":metoffice.get_satellite_composite, "width":600, "height":600, "expiry_hours":3}
 

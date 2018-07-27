@@ -54,6 +54,20 @@ function get_weather_time(weather_a, selector)
     return [times, ys];
 }
 
+
+// Extract a time series of dates and one particular string value (e.g. direction is "D", can be "N","NE", etc.)
+function get_weather_string(weather_a, selector)
+{
+    var times = [];
+    var ys = [];
+    weather_a.forEach(function(elt)
+    {
+        times.push(elt.date);
+        ys.push(elt[selector]);
+    });
+    return [times, ys];
+}
+
 // Return the weather report closest to the given time
 // mode can be: both, forecast or observation to select only those fields
 function summary_weather(weather_a, date, mode='both')

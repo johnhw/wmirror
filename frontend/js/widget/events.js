@@ -28,8 +28,13 @@ function render_events(text, events, max_days)
                     if(ev.summary.toLowerCase().includes("birthday"))
                         prefix = config.events.birthday_icon; 
                     else
-                        prefix = config.events.event_icon;           
+                        prefix = config.events.event_icon;         
+                    
+
                     var start_date_text = start_date.toLocaleString("en-gb", { day:"numeric", month: "long" });
+                    // don't need a label if it is today
+                    if(same_day(start_date, now))  
+                        start_date_text = "";
                     add.tspan(prefix + "" + start_date_text + "  " + ev.summary).newLine();            
                 }
             });
@@ -60,9 +65,9 @@ widget_today_events = {
     {
         this.bbox = bbox;
         this.group = draw.group();
-        this.text = this.group.text("").id("text_style");
+        this.text = draw.text("").id("text_style");
+        this.group.add(this.text).move(bbox.x, bbox.y);  
         
-        this.group.x(bbox.x).y(bbox.y);
     },
     update:function(json)
     {    
