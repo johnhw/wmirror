@@ -18,14 +18,14 @@ function weather_array(forecast_observation, date)
     var observation_periods = forecast_observation.observation.SiteRep.DV.Location.Period;
     var combined_periods = observation_periods.concat(forecast_periods);
     var reps = [];
-
+    var last_date = null;    
     combined_periods.forEach(function (period)    
     {
         var ymd = period.value.slice(0, -1).split("-");    
         // Note: times are zulu (i.e. UTC, not local time)
         // and crazy one month offset for zero-based javascript months :)
         var date = new Date(Date.UTC(ymd[0], ymd[1]-1, ymd[2], 0, 0, 0, 0));     
-        var last_date = null;           
+               
         period.Rep.forEach(function (rep)
         {
             var offset_minutes = rep["$"];            
@@ -33,7 +33,7 @@ function weather_array(forecast_observation, date)
             rep.date = rep_date;
             if(last_date===null || rep_date.getTime()>last_date.getTime())
             {
-                reps.push(rep);
+                reps.push(rep);                
                 last_date = rep_date;
             }
         });

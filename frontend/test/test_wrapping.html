@@ -24,8 +24,7 @@
             var fobj = draw.foreignObject(bbox.w,bbox.h);
             // add a div to hold the text to be wrapped
             fobj.appendChild("div", {id: 'text_style', style:"color:#fff", innerHTML:text});
-            var div = fobj.getChild(0);
-            
+            var div = fobj.getChild(0);            
             fobj.move(bbox.x, bbox.y);
             return fobj;
         }

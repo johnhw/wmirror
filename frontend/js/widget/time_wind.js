@@ -28,11 +28,11 @@ widget_time_wind = {
                 var ypos = strip_bbox.cy;        
                 var h = strip_bbox.h;
                 var hour = (hour_date-date) / MS_PER_HOUR;                
-                h = h / 1.5;
+                h = h / 4;
                 // render each arrow
-                if(is_major_tick(hour) && xpos)
+                if((is_major_tick(hour) || is_minor_tick(hour)) && xpos)
                 {
-                    arrow_bbox = {"x":xpos-h, "y":strip_bbox.cy-h, "x2":xpos+h, "y2":strip_bbox.cy+h, "w":h, "h":h, "cx":xpos, "cy":strip_bbox.cy};                    
+                    arrow_bbox = {"x":xpos-h, "y":strip_bbox.cy-h, "x2":xpos+h, "y2":strip_bbox.cy+h, "w":h*2, "h":h*2, "cx":xpos, "cy":strip_bbox.cy};                    
                     var g = group.group();
                     
                     wind_arrow(g, speeds[i], directions[i], arrow_bbox);

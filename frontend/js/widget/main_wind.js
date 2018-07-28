@@ -8,21 +8,23 @@ function wind_arrow(g, speed, direction, bbox)
     var rotation_angle = angles.indexOf(direction) * (Math.PI*2)/16.0 + Math.PI;
     var _speed = speed + "";
 
-    raw_request('/assets/wind_arrow.svg', function(svg)
+    raw_request('/assets/wind_arrow_ext.svg', function(svg)
     {
         var wind_group = g.group();
         var icon_group = wind_group.group();     
-        var icon_svg = icon_group.svg(svg);               
-        icon_group.rotate(deg(rotation_angle));  
-        // find centre point of arrow
-        var ctr_point = SVG.get("wind_circle_centre");
-        var ctr_box = ctr_point.rbox(wind_group);        
+        var icon_svg = icon_group.svg(svg);   
         
-        var text = wind_group.text(_speed).id("text_style").style({"fill":"#000"}).font({"size":ctr_box.w*0.65}).move(0,0);
+        var icon_bbox = icon_svg.bbox();
+        icon_svg.move(-icon_bbox.w/2, -icon_bbox.h/2);
+        icon_group.rotate(deg(rotation_angle));  
+        // find centre point of arrow        
+
+        
+        var text = wind_group.text(_speed).id("text_style").style({"fill":"#000"}).font({"size":icon_bbox.w*0.25}).move(0,0);
         
         var tbbox = text.bbox(); 
         // move text onto it, centred
-        text.move(ctr_box.cx-tbbox.cx,ctr_box.cy-tbbox.cy);           
+        text.move(-tbbox.cx,-tbbox.cy);           
         fit_svg(wind_group, bbox, 1.5);           
     });
 }

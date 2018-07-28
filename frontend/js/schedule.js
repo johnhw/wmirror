@@ -147,7 +147,7 @@ function handle_data_deps(data)
                 try
                 {
                     update_widget.update(data.json || null);
-                    console.log(dep + " update OK");
+                    if(_debug) console.log(dep + " update OK");
                 }
                 catch(err)
                 {

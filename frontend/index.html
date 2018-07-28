@@ -67,15 +67,12 @@
 <script type="text/javascript" src="js/widget/signature.js"></script>
 
 Moon phase in timeline
-Add holidays widget
-Add wind series
-Add day labels above time labels and fix timing spacing for 0000
-Replace temp time series with forecast numbers
-Fix moon phase names!
-Fetch latest twitter alert for aurora from https://twitter.com/AWUK_Shetland
+Fix wind series
+break holiday lines using foreignobject
+
 Look at getting wind and wave forecasts from the grib2 files / wavewatcherIII
 Rose fixes, including z-order, update rates
-Add remaining timeseries
+
 Testing: flicker on updates
 Testing: vary time and date
 
@@ -104,6 +101,8 @@ function get_skeleton_bbox(name)
      return null; // no such object
 }
 
+// enable/disable debugging
+var _debug = false;
 
 function init(skeleton_group)
 {
@@ -120,13 +119,14 @@ function init(skeleton_group)
                     var bbox = get_skeleton_bbox(widget);
                     
                     if(bbox)
-                    {                        
-                        draw.rect(bbox.w, bbox.h).move(bbox.x,bbox.y).fill('none').stroke('#f0f');
+                    {      
+                        if(_debug)                  
+                            draw.rect(bbox.w, bbox.h).move(bbox.x,bbox.y).fill('none').stroke('#f0f');
                     }
                     else
                         bbox = {w:0, h:0, x:0, y:0};                
                     widgets[widget].init(bbox);
-                    console.log(widget + " init OK");
+                    if(_debug) console.log(widget + " init OK");
                 
                 }
             }
@@ -144,7 +144,7 @@ function init(skeleton_group)
 
  
 // Get the skeleton document which has the layout information
-raw_request("/assets/prototype_9_skeleton.svg", svg=>{
+raw_request("/assets/prototype_10_skeleton.svg", svg=>{
     var skeleton_group = draw.group();
     skeleton_group.svg(svg);
     skeleton_group.attr({'visibility':'hidden'})

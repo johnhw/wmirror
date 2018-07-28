@@ -4,8 +4,7 @@ port = 8080
 [location]
 # Geographical location
 # location in sexigesimal degrees
-lat = '60:11:37'
-lon = '-1:17:40'
+
 
 # location specific configuration
 # for weather forecasting

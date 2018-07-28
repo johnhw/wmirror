@@ -30,6 +30,8 @@ function render_events(text, events, max_days)
                     else
                         prefix = config.events.event_icon;         
                     
+                    // remove prefix for now
+                    prefix = "";
 
                     var start_date_text = start_date.toLocaleString("en-gb", { day:"numeric", month: "long" });
                     // don't need a label if it is today
@@ -79,4 +81,3 @@ widget_today_events = {
 
 
 register_widget(widget_events, "future_events", ["events"]);
-register_widget(widget_today_events, "today_events", ["events"]);

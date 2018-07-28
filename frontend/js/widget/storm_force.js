@@ -46,7 +46,7 @@ widget_storm_force = {
     },
 
     update:function(json){
-        var wind = general_forecast(json).W;
+        var wind = general_forecast(json).S;
         var storm = get_storm_force(wind);
         var storm_force_text =  storm.name;        
         this.text.text(storm_force_text);
@@ -55,7 +55,7 @@ widget_storm_force = {
             this.text.fill("#fff")
         if(storm.force>6)
             this.text.fill("#ff8")
-        if(storm.force>8)
+        if(storm.force>9)
             this.text.fill("#f00")            
         fit_svg(this.group, this.bbox, 0.75);
     },
